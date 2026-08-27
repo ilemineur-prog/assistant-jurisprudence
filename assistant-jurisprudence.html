@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistant Référencement — Jurisprudence</title>
+<style>
+  :root{
+    --bord:#7b1f2b;--bord-dark:#5c141d;--bord-light:#9b3340;
+    --bord-pale:#f6ebec;--bord-pale2:#fbf4f5;
+    --ink:#241a1c;--muted:#6b5b5e;--line:#e3cfd2;--ok:#2e7d4f;--amber:#8a5a00;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;background:var(--bord-pale2);color:var(--ink);line-height:1.5;}
+  header{background:linear-gradient(135deg,var(--bord) 0%,var(--bord-dark) 100%);color:#fff;padding:28px 24px 22px;}
+  header h1{margin:0 0 6px;font-size:22px;font-weight:700;letter-spacing:.2px;}
+  header p{margin:0;font-size:13.5px;opacity:.92;}
+  .wrap{max-width:920px;margin:0 auto;padding:22px 18px 60px;}
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 4px;}
+  .tab{border:1.5px solid var(--line);background:#fff;color:var(--bord-dark);padding:10px 16px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;}
+  .tab:hover{border-color:var(--bord-light);}
+  .tab.active{background:var(--bord);color:#fff;border-color:var(--bord);}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin-top:14px;box-shadow:0 1px 3px rgba(120,30,45,.06);}
+  .intro{font-size:13px;color:var(--muted);margin:-4px 0 16px;}
+  label{display:block;font-size:13px;font-weight:600;margin:14px 0 5px;color:var(--bord-dark);}
+  .hint{font-weight:400;color:var(--muted);font-size:12px;}
+  select,input[type=text],input[type=date]{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;background:#fff;color:var(--ink);font-family:inherit;}
+  select:focus,input:focus{outline:none;border-color:var(--bord-light);box-shadow:0 0 0 3px var(--bord-pale);}
+  .row{display:flex;gap:14px;flex-wrap:wrap;}
+  .row > div{flex:1;min-width:140px;}
+  .field{display:none;}
+  .field.show{display:block;}
+  .check{display:flex;align-items:center;gap:8px;margin-top:12px;}
+  .check input{width:auto;}
+  .check label{margin:0;font-weight:500;color:var(--ink);}
+  .radio-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+  .radio-group label{margin:0;font-weight:500;border:1.5px solid var(--line);border-radius:9px;padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:7px;color:var(--ink);}
+  .radio-group input{width:auto;}
+  .radio-group label.sel{border-color:var(--bord);background:var(--bord-pale);}
+  .actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
+  .gen{background:var(--bord);color:#fff;border:none;border-radius:10px;padding:13px 22px;font-size:15px;font-weight:700;cursor:pointer;flex:1;min-width:200px;transition:background .15s;}
+  .gen:hover{background:var(--bord-dark);}
+  .reset{background:#fff;border:1.5px solid var(--line);color:var(--muted);border-radius:10px;padding:13px 18px;font-size:14px;font-weight:600;cursor:pointer;}
+  .reset:hover{border-color:var(--bord-light);color:var(--bord-dark);}
+  .result{margin-top:18px;background:var(--bord-pale);border:1px solid var(--line);border-radius:12px;padding:18px;display:none;}
+  .result.show{display:block;}
+  .result h3{margin:0 0 10px;font-size:12.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--bord-dark);}
+  .ref-out{font-size:16px;background:#fff;border:1px dashed var(--bord-light);border-radius:9px;padding:14px 16px;color:var(--ink);font-family:Georgia,"Times New Roman",serif;}
+  .ref-out em{font-style:italic;}
+  .btns{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+  .btn-copy{background:#fff;border:1.5px solid var(--bord);color:var(--bord-dark);border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;cursor:pointer;}
+  .btn-copy:hover{background:var(--bord-pale);}
+  .btn-copy.done{background:var(--ok);border-color:var(--ok);color:#fff;}
+  .err{color:var(--bord);font-size:13px;margin-top:10px;font-weight:600;display:none;}
+  .err.show{display:block;}
+  .sub{font-size:12px;color:var(--muted);margin:2px 0 0;}
+  .suggest{font-size:12.5px;color:var(--ok);margin:6px 0 0;font-weight:600;min-height:16px;}
+  .sect{border-top:1px dashed var(--line);margin-top:18px;padding-top:6px;}
+  .sect-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--bord-light);margin-top:14px;}
+  footer{text-align:center;font-size:12px;color:var(--muted);padding:20px;font-style:italic;}
+  code{background:var(--bord-pale);padding:1px 5px;border-radius:4px;font-size:12.5px;color:var(--bord-dark);}
+  /* Landing niveaux */
+  .levels{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+  .level-btn{display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:18px 20px;cursor:pointer;transition:all .15s;}
+  .level-btn:hover{border-color:var(--bord);box-shadow:0 2px 8px rgba(120,30,45,.08);}
+  .level-btn h2{margin:0 0 3px;font-size:16px;color:var(--bord-dark);}
+  .level-btn p{margin:0;font-size:12.5px;color:var(--muted);}
+  .badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+  .badge.go{background:var(--bord-pale);color:var(--bord-dark);}
+  .badge.wip{background:#fbf2e0;color:var(--amber);}
+  .back{background:none;border:none;color:var(--bord-dark);font-size:13px;font-weight:600;cursor:pointer;padding:6px 0;}
+  .wip-card{text-align:center;padding:40px 24px;}
+  .wip-card .big{font-size:40px;margin-bottom:10px;}
+  .wip-card h2{color:var(--bord-dark);margin:0 0 8px;}
+  .wip-card p{color:var(--muted);max-width:440px;margin:0 auto;}
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Assistant de référencement — Jurisprudence</h1>
+  <p>Génère automatiquement la référence d'une décision de justice, conforme au <em>Guide des citations, références et abréviations juridiques</em>.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ====== NIVEAU (landing) ====== -->
+  <div id="levels">
+    <p class="intro" style="margin-top:6px">Choisissez le niveau de la juridiction :</p>
+    <div class="levels">
+      <button class="level-btn" data-level="internationale">
+        <div><h2>Jurisprudence internationale</h2><p>C.I.J., juridictions pénales internationales…</p></div>
+        <span class="badge wip">🚧 En construction</span>
+      </button>
+      <button class="level-btn" data-level="europeenne">
+        <div><h2>Jurisprudence européenne</h2><p>Cour eur. D.H., C.J.U.E.…</p></div>
+        <span class="badge wip">🚧 En construction</span>
+      </button>
+      <button class="level-btn" data-level="nationale">
+        <div><h2>Jurisprudence nationale (belge)</h2><p>Ordre judiciaire, Cour constitutionnelle, Conseil d'État</p></div>
+        <span class="badge go">Disponible →</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ====== EN CONSTRUCTION ====== -->
+  <div id="wip" class="card hidden">
+    <button class="back" data-back>← Retour</button>
+    <div class="wip-card">
+      <div class="big">🚧</div>
+      <h2 id="wip-title">En construction</h2>
+      <p>Cette partie sera ajoutée dans une prochaine version de l'outil. Pour l'instant, seule la <strong>jurisprudence nationale (belge)</strong> est disponible.</p>
+    </div>
+  </div>
+
+  <!-- ====== NATIONAL ====== -->
+  <div id="national" class="hidden">
+    <button class="back" data-back>← Retour aux niveaux</button>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="oj">Ordre judiciaire</button>
+      <button class="tab" data-tab="cc">Cour constitutionnelle</button>
+      <button class="tab" data-tab="ce">Conseil d'État</button>
+    </div>
+
+    <!-- ORDRE JUDICIAIRE -->
+    <div class="card tabpane" id="pane-oj">
+      <p class="intro">Cours et tribunaux de l'ordre judiciaire. Règle générale — n° 131 du Guide.</p>
+
+      <label>Type de juridiction</label>
+      <select id="oj-type">
+        <option value="cassation">Cour de cassation — Cass.</option>
+        <option value="appel">Cour d'appel (ville seule)</option>
+        <option value="ctrav">Cour du travail — C. trav.</option>
+        <option value="assises">Cour d'assises — Cour ass.</option>
+        <option value="civ">Tribunal de première instance — section civile — Civ.</option>
+        <option value="corr">Tribunal de première instance — section correctionnelle — Corr.</option>
+        <option value="tribfam">Tribunal de la famille — Trib. fam.</option>
+        <option value="tribjeun">Tribunal de la jeunesse — Trib. jeun.</option>
+        <option value="tap">Tribunal de l'application des peines — T.A.P.</option>
+        <option value="tribentr">Tribunal de l'entreprise — Trib. entr.</option>
+        <option value="comm">Tribunal de commerce — Comm.</option>
+        <option value="tribtrav">Tribunal du travail — Trib. trav.</option>
+        <option value="pol">Tribunal de police — Pol.</option>
+        <option value="jp">Justice de paix — J.P.</option>
+        <option value="tribarr">Tribunal d'arrondissement — Trib. arr.</option>
+      </select>
+
+      <div class="field" id="oj-ville-f">
+        <label id="oj-ville-l">Ville / siège <span class="hint">(en toutes lettres)</span></label>
+        <input type="text" id="oj-ville" placeholder="ex. Mons, Liège, Bruxelles…">
+        <p class="sub" id="oj-ville-sub"></p>
+      </div>
+
+      <div class="field" id="oj-lang-f">
+        <label>Langue (Bruxelles) <span class="hint">— depuis le 31 mars 2014</span></label>
+        <select id="oj-lang"><option value="">(aucune / non Bruxelles)</option><option value="fr.">fr. (francophone)</option><option value="néerl.">néerl. (néerlandophone)</option></select>
+      </div>
+
+      <div class="row">
+        <div class="field" id="oj-div-f"><label>Division territoriale <span class="hint">(préfixe « div. »)</span></label><input type="text" id="oj-div" placeholder="ex. Bruges"></div>
+        <div class="field" id="oj-cant-f"><label>N° de canton <span class="hint">(justice de paix)</span></label><input type="text" id="oj-cant" placeholder="ex. 2e cant."></div>
+      </div>
+      <div class="field" id="oj-siege-f">
+        <label>Siège <span class="hint">(cantons à plusieurs sièges — « siège de … »)</span></label>
+        <input type="text" id="oj-siege" placeholder="ex. Audenarde, Huy, Poperinge">
+        <p class="sub">Ex. : J.P. Audenarde-Kruishoutem, siège d'Audenarde.</p>
+      </div>
+
+      <label>Chambre <span class="hint">(n° ou nature ; un chiffre seul suffit : « 2 » → 2ᵉ ch.)</span></label>
+      <input type="text" id="oj-ch" placeholder="ex. 2, référé, saisies, jeunesse, ch. du conseil…">
+      <p class="suggest" id="oj-ch-sug"></p>
+
+      <label>Date du prononcé</label>
+      <input type="date" id="oj-date">
+      <p class="sub">Jour en chiffres, mois en toutes lettres, année en chiffres.</p>
+
+      <div class="sect-title">Lieu de publication</div>
+      <div class="radio-group" id="oj-mode">
+        <label class="sel"><input type="radio" name="ojmode" value="revue" checked> Revue</label>
+        <label><input type="radio" name="ojmode" value="net"> Internet (banque de données)</label>
+        <label><input type="radio" name="ojmode" value="ined"> Inédit</label>
+      </div>
+
+      <div class="field show revue-block" id="oj-revue-block"></div>
+
+      <div class="field" id="oj-net-block">
+        <div class="row">
+          <div><label>N° de rôle général (R.G.)</label><input type="text" id="oj-rg" placeholder="ex. 2014/AR/1234"></div>
+          <div><label>Site <span class="hint">(« disponible sur … »)</span></label><input type="text" id="oj-site" placeholder="ex. www.juportal.be"></div>
+        </div>
+      </div>
+      <div class="field" id="oj-ined-block">
+        <label>N° de rôle général (R.G.) <span class="hint">(« inéd., R.G. n° … »)</span></label>
+        <input type="text" id="oj-rg2" placeholder="ex. 2014/AR/1234">
+      </div>
+
+      <div class="check"><input type="checkbox" id="oj-somm"><label for="oj-somm">Décision citée en sommaire — ajoute <code>(somm.)</code></label></div>
+
+      <div class="sect">
+        <div class="sect-title">Ministère public <span class="hint" style="text-transform:none">(facultatif)</span></div>
+        <div class="row">
+          <div><label>Nature</label>
+            <select id="oj-mp-nat"><option value="">(aucune)</option><option value="concl.">concl. (conclusions)</option><option value="avis">avis</option><option value="rapp.">rapp. (rapport)</option></select>
+          </div>
+          <div><label>Fonction du magistrat</label>
+            <select id="oj-mp-fct"><option value="">(aucune)</option><option value="Proc. gén.">Proc. gén.</option><option value="prem. av. gén.">prem. av. gén.</option><option value="Av. gén.">Av. gén.</option><option value="Aud.">Aud.</option><option value="Aud. gén.">Aud. gén.</option><option value="subst. proc. Roi">subst. proc. Roi</option><option value="M.P.">M.P.</option></select>
+          </div>
+          <div><label>Nom ou initiales <span class="hint">(fac.)</span></label><input type="text" id="oj-mp-nom" placeholder="ex. A. Henkes"></div>
+        </div>
+      </div>
+
+      <div class="sect">
+        <div class="sect-title">Note / observations <span class="hint" style="text-transform:none">(facultatif)</span></div>
+        <div class="row">
+          <div><label>Type</label><select id="oj-note-t"><option value="">(aucune)</option><option value="note">note</option><option value="obs.">obs.</option></select></div>
+          <div><label>Initiale du prénom + nom <span class="hint">(laisser vide si inconnu → « note » seul)</span></label><input type="text" id="oj-note-n" placeholder="ex. C. Van Severen"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="gen" data-gen="oj">▶ Générer la référence</button>
+        <button class="reset" data-reset="pane-oj">↻ Effacer</button>
+      </div>
+      <p class="err" id="oj-err"></p>
+      <div class="result" id="oj-result">
+        <h3>Référence générée</h3>
+        <div class="ref-out" id="oj-ref"></div>
+        <div class="btns"><button class="btn-copy" data-copy="oj-ref">Copier (avec mise en forme)</button><button class="btn-copy" data-copytxt="oj-ref">Copier (texte simple)</button></div>
+      </div>
+    </div>
+
+    <!-- COUR CONSTITUTIONNELLE -->
+    <div class="card tabpane" id="pane-cc" style="display:none">
+      <p class="intro">Cour constitutionnelle (C.A. avant le 7 mai 2007). Règle — n° 150. Le site étant présumé connu, aucune publication n'est requise ; une revue et une note restent possibles.</p>
+      <label>Dénomination</label>
+      <select id="cc-denom"><option value="C.C.">C.C. — Cour constitutionnelle (depuis le 7 mai 2007)</option><option value="C.A.">C.A. — Cour d'arbitrage (avant le 7 mai 2007)</option></select>
+      <label>Date de l'arrêt</label>
+      <input type="date" id="cc-date">
+      <label>N° d'arrêt <span class="hint">(« /année » ajouté d'office si omis)</span></label>
+      <input type="text" id="cc-num" placeholder="ex. 112/2012  ou  112">
+      <label>Considérant / passage précis <span class="hint">(facultatif)</span></label>
+      <input type="text" id="cc-pass" placeholder="ex. B.2.2">
+      <div class="sect">
+        <div class="sect-title">Publication en revue <span class="hint" style="text-transform:none">(facultatif)</span></div>
+        <div class="revue-block" id="cc-revue-block"></div>
+        <div class="row">
+          <div><label>Note / obs.</label><select id="cc-note-t"><option value="">(aucune)</option><option value="note">note</option><option value="obs.">obs.</option></select></div>
+          <div><label>Initiale du prénom + nom <span class="hint">(laisser vide si inconnu)</span></label><input type="text" id="cc-note-n" placeholder="ex. A. Coppens"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="gen" data-gen="cc">▶ Générer la référence</button>
+        <button class="reset" data-reset="pane-cc">↻ Effacer</button>
+      </div>
+      <p class="err" id="cc-err"></p>
+      <div class="result" id="cc-result">
+        <h3>Référence générée</h3><div class="ref-out" id="cc-ref"></div>
+        <div class="btns"><button class="btn-copy" data-copy="cc-ref">Copier (avec mise en forme)</button><button class="btn-copy" data-copytxt="cc-ref">Copier (texte simple)</button></div>
+      </div>
+    </div>
+
+    <!-- CONSEIL D'ÉTAT -->
+    <div class="card tabpane" id="pane-ce" style="display:none">
+      <p class="intro">Conseil d'État. Règle — n° 156. Le nom du requérant se met en caractères romains (jamais en italique).</p>
+      <label>Chambre <span class="hint">(entre parenthèses ; facultatif — « 11 » → 11ᵉ ch.)</span></label>
+      <input type="text" id="ce-ch" placeholder="ex. 11e ch. réf., 11, ass. gén.">
+      <p class="suggest" id="ce-ch-sug"></p>
+      <label>Date de l'arrêt</label>
+      <input type="date" id="ce-date">
+      <label>N° d'arrêt <span class="hint">(le point de milliers est ajouté d'office si omis)</span></label>
+      <input type="text" id="ce-num" placeholder="ex. 230.432  ou  230432">
+      <label>Requérant(s) <span class="hint">(noms séparés par une virgule)</span></label>
+      <input type="text" id="ce-req" placeholder="ex. Mansour  ou  Dupont, Durand, Martin">
+      <div class="check"><input type="checkbox" id="ce-anon"><label for="ce-anon">Requérant anonyme — remplace par <code>X</code></label></div>
+      <p class="sub">1 : nom seul. 2-3 : reliés par « et ». 4+ : premier nom + « et crts. ». Les majuscules sont automatiquement corrigées.</p>
+      <label>Considérant / passage précis <span class="hint">(facultatif)</span></label>
+      <input type="text" id="ce-pass" placeholder="ex. point 12">
+
+      <div class="sect">
+        <div class="sect-title">Avis de l'auditeur <span class="hint" style="text-transform:none">(facultatif)</span></div>
+        <div class="row">
+          <div><label>Fonction</label>
+            <select id="ce-mp-fct"><option value="">(aucun)</option><option value="aud.">aud. (auditeur)</option><option value="Prem. aud. c.s.">Prem. aud. c.s. (premier auditeur chef de section)</option></select>
+          </div>
+          <div><label>Initiale du prénom + nom <span class="hint">(fac.)</span></label><input type="text" id="ce-mp-nom" placeholder="ex. A. Henkes"></div>
+        </div>
+        <p class="sub">L'auditeur remet toujours un <em>avis</em> : la mention « avis » est ajoutée automatiquement.</p>
+      </div>
+
+      <div class="sect">
+        <div class="sect-title">Publication en ligne <span class="hint" style="text-transform:none">(facultatif)</span></div>
+        <label>Site <span class="hint">(le site du Conseil d'État n'est pas reproduit)</span></label>
+        <input type="text" id="ce-site" placeholder="laisser vide si publié sur le site du Conseil d'État">
+        <p class="sub">Seul un site <strong>autre</strong> que celui du Conseil d'État figure dans la référence (« disponible sur … »).</p>
+      </div>
+
+      <div class="sect">
+        <div class="sect-title">Publication en revue <span class="hint" style="text-transform:none">(facultatif)</span></div>
+        <div class="revue-block" id="ce-revue-block"></div>
+        <div class="row">
+          <div><label>Note / obs.</label><select id="ce-note-t"><option value="">(aucune)</option><option value="note">note</option><option value="obs.">obs.</option></select></div>
+          <div><label>Initiale du prénom + nom <span class="hint">(laisser vide si inconnu)</span></label><input type="text" id="ce-note-n" placeholder="ex. C. Van Severen"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="gen" data-gen="ce">▶ Générer la référence</button>
+        <button class="reset" data-reset="pane-ce">↻ Effacer</button>
+      </div>
+      <p class="err" id="ce-err"></p>
+      <div class="result" id="ce-result">
+        <h3>Référence générée</h3><div class="ref-out" id="ce-ref"></div>
+        <div class="btns"><button class="btn-copy" data-copy="ce-ref">Copier (avec mise en forme)</button><button class="btn-copy" data-copytxt="ce-ref">Copier (texte simple)</button></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Document rédigé à l'usage des étudiant·e·s en droit — HE2B / Isabelle Lemineur</footer>
+
+<datalist id="revues-datalist"></datalist>
+
+<script>
+/* ===================== DONNÉES ===================== */
+/* Revues : nom complet <-> abréviation (Guide, Livre III, p. 209 & 239). Liste non limitative. */
+const REVUES=[
+["A.F.T.","Algemeen fiscaal tijdschrift"],
+["A.J.D.A.","Actualité juridique. Droit administratif"],
+["A.J.I.L.","American journal of international law"],
+["A.J.T.","Algemeen juridisch tijdschrift"],
+["A.L.D.","Actualité législative Dalloz"],
+["A.M.R.","Algemene modellenverzameling voor de rechtspraktijk"],
+["Act. dr.","Actualités du droit"],
+["Act. dr. fam.","Actualités du droit de la famille"],
+["Act. jur.","Actualités juridiques"],
+["Act. jur. P.I. addit.","Actualité juridique. Propriété immobilière additionnel"],
+["Adm. lex.","Administratief lexicon"],
+["Ann. Cons.","Benelux Annales du Conseil interparlementaire consultatif du Benelux"],
+["Ann. Conv. D.H.","Annuaire de la Convention européenne des droits de l'homme"],
+["Ann. dr.","Annales de droit de Louvain"],
+["Ann. dr. Lg.","Annales de droit de Liège"],
+["Ann. Fac. dr. Lg.","Annales de la Faculté de droit, d'économie et de sciences sociales de"],
+["Ann. fr. dr. intern.","Annuaire français de droit international"],
+["Ann. jur. créd.","Annuaire juridique du crédit"],
+["Ann. jur. créd. règl. coll.","Annuaire juridique du crédit et du règlement collectif de dettes"],
+["Ann. loyers","Annales des loyers"],
+["Ann. not.","Annales du notariat et de l'enregistrement"],
+["Ann. parl.","Annales parlementaires"],
+["Ann. prat. comm.","Annuaire pratique du commerce"],
+["Ann. propr. industr.","Annales de la propriété industrielle, artistique et littéraire"],
+["Ann. écon. publ.","Annales de l'économie publique, sociale et coopérative"],
+["Arch. phil. dr.","Archives de philosophie du droit et de sociologie juridique"],
+["B.F.A.R.","Bulletin de la Fondation André Renard"],
+["B.I.-I.N.A.M.I.","Bulletin d'information de l'I.N.A.M.I."],
+["B.L.","Bulletin législatif belge"],
+["B.R.H.","Belgische rechtspraak in handelszaken"],
+["B.T.I.R.","Belgisch tijdschrift voor internationaal recht"],
+["B.T.S.Z.","Belgisch tijdschrift voor sociale zekerheid"],
+["B.T.W. rev. B.T.W. revue (voy.","Revue de la T.V.A.)"],
+["Bull.","Bulletin des arrêts de la Cour de cassation"],
+["Bull. Acad. R. Sc. O.","Bulletin des séances de l'Académie royale des Sciences d'outre-mer"],
+["Bull. adm. pénit.","Bulletin de l'administration pénitentiaire"],
+["Bull. ass.","Bulletin des assurances"],
+["Bull. Bel.","Bulletin der belastingen"],
+["Bull. civ.","Bulletin des chambres civiles de la Cour de cassation"],
+["Bull. contr.","Bulletin des contributions"],
+["Bull. Créd. comm.","Bulletin du Crédit communal"],
+["Bull. doc. min. Fin.","Bulletin de documentation du ministère des Finances"],
+["Bull. F.E.B.","Bulletin de la Fédération des entreprises de Belgique"],
+["Bull. fisc. fin. r.","Bulletin voor fiscaal en financieel recht"],
+["Bull. gem. secr.","Bulletin van de Nationale Federatie der gemeentesecretarissen van België"],
+["Bull. handelsregl.","Bulletin van de handelsreglementering"],
+["Bull. prov.","Bulletin provincial"],
+["Bull. secr. comm.","Bulletin de la Fédération nationale des secrétaires communaux de Belgique"],
+["Bull. strafinr.","Bulletin van het Bestuur van de strafinrichtingen"],
+["Bull. trim. b. dr. comp.","Bulletin trimestriel belge de droit comparé"],
+["Bull. dr. h.","Bulletin d'information sur les droits de l'homme"],
+["C.A.B.G.","Cahiers Antwerpen Brussel Gent"],
+["C.D.P.K.","Chroniques de droit public"],
+["C.R.A.","Circulation, responsabilité et assurances"],
+["Cah. const.","Cahiers constitutionnels"],
+["Cah. dr. entreprise","Cahiers de droit de l'entreprise"],
+["Cah. dr. europ.","Cahiers de droit européen"],
+["Cah. dr. fam.","Cahiers de droit familial"],
+["Cah. dr. imm.","Cahiers de droit immobilier"],
+["Cah. dr. inf.","Cahiers Lamy du droit de l'informatique"],
+["Cah. dr. jud.","Cahiers de droit judiciaire"],
+["Cah. jur. élec. gaz","Cahiers juridiques de l'électricité et du gaz"],
+["Cah. méd. dettes","Cahiers de la médiation des dettes"],
+["Cah. sc. adm.","Cahiers des sciences administratives"],
+["Chr. D.S.","Chroniques de droit social"],
+["Col. J. Trans. L.","Columbia Journal of Transnational Law"],
+["D.A.","Droit des affaires"],
+["D.C.C.R.","Droit de la consommation / Consumentenrecht"],
+["D.I.T.","Droit de l'informatique et des télécoms"],
+["D.P.C.I.","Droit et pratique du commerce international"],
+["D.Q.M.","Droit en quart-monde"],
+["D.R.","Décisions et rapports de la Commission européenne des droits de l'homme"],
+["D.S.C.","Droit des sociétés commerciales"],
+["Div. act.","Divorce, actualité juridique, sociale & fiscale"],
+["Doc. Min. Fin.","Documentatieblad Ministerie van Financiën"],
+["Dr. circ.","Droit de la circulation Jurisprudence"],
+["Dr. et","Ville Droit et Ville"],
+["Dr. et Rég.","Droit et Région (précédemment Revue régionale de droit)"],
+["Dr. europ. transp.","Droit européen des transports"],
+["Dr. fisc.","Droit fiscal"],
+["Dr. fond.","Droits fondamentaux"],
+["Dr. inform.","Droit de l'informatique"],
+["Dr. marit. franç.","Droit maritime français Droit pénal et procédure pénale Droit pénal et procédure pénale"],
+["Dr. prat. comm. intern.","Droit et pratique du commerce international"],
+["Dr. soc.","Droit social"],
+["E.C.L.R.","European Constitutional Law Review"],
+["E.H.R.L.R.","European Human Rights Law Review"],
+["E.I.P.R.","European Intellectual Property Review"],
+["E.J.I.L.","European Journal of International Law"],
+["E.J.M.L.","European Journal of Migration and Law"],
+["E.L.J.","European Law Journal"],
+["E.L. Rev.","European Law Review"],
+["E.P.C.","Évaluation du préjudice corporel au regard de la jurisprudence"],
+["Entr. et dr.","L'entreprise et le droit"],
+["F. J. F.","Fiscale jurisprudentie/Jurisprudence fiscale"],
+["F. rechtspr.","Fundamentele rechtspraak"],
+["Fare. Act.","Gerechtelijk akkoord & Faillissement. Actualiteit"],
+["fisc.","(chambre) fiscale"],
+["Fisc. act.","Fiscale actualiteit. Nieuwsbrief"],
+["Fisc. as.","Fiscalité de l'assurance"],
+["H.I.L.J.","Harvard International Law Journal"],
+["H.R.L.R","Human Rights Law Review"],
+["Harv. H.R.J.","Harvard Human Rights Journal"],
+["I.J. Const. L.","International Journal of Constitutional Law"],
+["I.R.D.I.","Droits intellectuels Ius Interuniversitair studententijdschrift Ius & actores Ius & actores"],
+["Ing.-Cons.","Revue de droit intellectuel. L'ingénieur- Conseil"],
+["Intern. Fisc. Act.","Internationale Fiscale Actualiteit Nieuwsbrief"],
+["Intertax","Intertax (International tax review)"],
+["J. dr. jeun.","Journal du droit des jeunes"],
+["J.C.B.","Jurisprudence commerciale de Belgique"],
+["J.C.E.","Jurisprudence du Conseil d'État"],
+["J.C.M.S.","Journal of Common Market Studies"],
+["J.D.E.","Journal de droit européen (successeur du Journal des tribunaux - droit européen)"],
+["J.D.F.","Journal de droit fiscal"],
+["J.D.J.","Journal du droit des jeunes"],
+["J.D.S.C.","Recueil annuel de jurisprudence en droit des sociétés commerciales"],
+["J.J.D.","Journal des juristes démocrates"],
+["J.J.P.","Journal des juges de paix"],
+["J.J.Pol.","Journal des juges de police"],
+["J.L.","Jurisprudence de Liège"],
+["J.L.M.B.","Revue de jurisprudence de Liège, Mons et Bruxelles"],
+["J.O.C.E.","Journal officiel des Communautés européennes"],
+["J.O.U.E.","Journal officiel de l'Union européenne"],
+["J.P.A.","Jurisprudence du port d'Anvers"],
+["J.R.I.","Journal de réflexion sur l'informatique"],
+["J.T.","Journal des tribunaux"],
+["J.T.O.","Journal des tribunaux d'outre-mer"],
+["J.T.T.","Journal des tribunaux du travail"],
+["J.W.T.","Journal of world trade"],
+["Journ. dr. intern.","Journal du droit international (Clunet)"],
+["Journ. dr. j.","Journal du droit des jeunes"],
+["Journ. jur.","Journal du juriste"],
+["Journ. prat. dr. fisc. fin.","Journal pratique de droit fiscal et financier"],
+["Journ. proc.","Journal des procès"],
+["Juger","Juger (revue de l'Association syndicale des magistrats) Jura Falc. Jura Falconis"],
+["Jur.","Hainaut Revue de jurisprudence du Hainaut"],
+["Jur. comm. Brux.","Jurisprudence commerciale de"],
+["Jur. comm. Fl.","Jurisprudence commerciale des Flandres"],
+["Jur. dr. soc. B.L.N.","Jurisprudence du droit social Bruxelles- Louvain-Nivelles"],
+["Jur. Niv.","Recueil de la jurisprudence du tribunal de Nivelles"],
+["Jur. trav. Brux.","Jurisprudence des juridictions du travail de Bruxelles"],
+["Kinderrechtengids.","Commentaren - Regelgeving - Rechtspraak - Nuttige informatie"],
+["N.J.W.","Nieuw juridisch weekblad"],
+["N. arbeidsr.","Nieuw arbeidsrecht"],
+["NYU. J. Int'l. L&P.","New York University Journal of International Law and Politics"],
+["Panopticon","Panopticon"],
+["Pas.","Pasicrisie"],
+["R.A.A.C.E.","Recueil des arrêts et avis du Conseil d'État (avant 1972)"],
+["R.A.B.G.","Rechtspraak Antwerpen Brussel Gent"],
+["R.A.C.E.","Recueil des arrêts du Conseil d'État (à partir de 1972)"],
+["R.A.J.B.","Recueil annuel de jurisprudence belge"],
+["R.B.D.C.","Revue belge de droit constitutionnel"],
+["R.B.D.I.","Revue belge de droit international"],
+["R.B.D.I.P.R.-T.I.P.R.","Revue de droit international privé - Tijdschrift voor Internationaal Privaatrecht"],
+["R.C.A.D.I.","Recueil des cours de l'Académie de droit international de La Haye"],
+["R.C.B.","Revue de la concurrence belge"],
+["R.C.D.I.","Revue Copropriété et droit immobilier"],
+["R.C.J.B.","Revue critique de jurisprudence belge"],
+["R.D.C.","Revue de droit commercial belge"],
+["R.D.I.R.","Revue du droit des industries de réseau"],
+["R.D.J.P.","Revue de droit judiciaire et de la preuve"],
+["R.D.S.","Revue de droit social"],
+["R.D.T.I.","Revue du droit des technologies de l'information (anciennement Ubiquité)"],
+["R.D.U.E.","Revue du droit de l'Union européenne"],
+["R.E.C.O.","Revue européenne de droit de la consommation"],
+["R.F.R.L.","Revue de fiscalité régionale et locale"],
+["R.G.A.R.","Revue générale des assurances et des responsabilités"],
+["R.G.C.F.","Revue générale du contentieux fiscal"],
+["R.G.D.C.","Revue générale de droit civil belge"],
+["R.G.F.","Revue générale de fiscalité"],
+["R.H.A.","Rechtspraak der haven van Antwerpen"],
+["R.I.C.","Revue internationale de la concurrence"],
+["R.I.D.C.","Revue internationale de droit comparé"],
+["R.I.D.E.","Revue internationale de droit économique"],
+["R.I.E.J.","Revue interdisciplinaire d'études juridiques"],
+["R.I.S.A.","Revue internationale des sciences administratives"],
+["R.J.D.A.","Recueil de jurisprudence du droit administratif et du Conseil d'État"],
+["R.M.C.","Revue du Marché commun"],
+["R.M.C.U.E.","Revue du Marché commun et de l'Union européenne"],
+["R.P.D.B.","Répertoire pratique du droit belge"],
+["R.R.D.","Revue régionale de droit (devenue Droit et Région)"],
+["R.R.J.","Revue de la recherche juridique. Droit prospectif"],
+["R.S.C.","Revue de science criminelle et de droit pénal comparé"],
+["R.U.D.H.","Revue universelle des droits de l'homme"],
+["R.W.","Rechtskundig Weekblad"],
+["Rec. C.J.U.E.","Recueil de jurisprudence de la Cour de justice de l'Union européenne"],
+["Rec. dr. pén.","Recueil de droit pénal"],
+["Rec. gén. enr. not.","Recueil général de l'enregistrement et du notariat"],
+["Rec. lég. gén.","Recueil de la législation générale en vigueur en Belgique"],
+["Rec. Trib. fonct. publ. UE","Recueil de la jurisprudence du Tribunal de la fonction publique de l'Union européenne"],
+["Rechtsk. T.","Rechtskundig Tijdschrift"],
+["Rechtspr. Arb. Br.","Rechtspraak van de Arbeidsgerechten van Brussel"],
+["Rev. acc. trav.","Revue des accidents du travail et de droit industriel et social"],
+["Rev. adm.","Revue de l'administration et du droit administratif de la Belgique"],
+["Rev. arb.","Revue de l'arbitrage"],
+["Rev. b. dr. const.","Revue belge de droit constitutionnel"],
+["Rev. b. séc. soc.","Revue belge de sécurité sociale"],
+["Rev. banq.","Revue de la banque"],
+["Rev. comm.","La revue communale"],
+["Rev. crit. dr. intern. privé","Revue critique de droit international privé"],
+["Rev. dr. b.","Revue de droit belge"],
+["Rev. dr. commun.","Revue de droit communal"],
+["Rev. dr. contemp.","Revue internationale de droit contemporain (Association internationale des juristes démocrates)"],
+["Rev. dr. fam.","Revue de droit familial"],
+["Rev. dr. h.","Revue des droits de l'homme"],
+["Rev. dr. intern. comp.","Revue de droit international et de droit comparé"],
+["Rev. dr. min.","Revue de droit minier"],
+["Rev. dr. publ.","Revue du droit public et de la science politique"],
+["Rev. dr. pén. crim.","Revue de droit pénal et de criminologie"],
+["Rev. dr. pén. mil.","Revue de droit pénal militaire et de droit de la guerre"],
+["Rev. dr. rur.","Revue de droit rural"],
+["Rev. dr. sanit. et soc.","Revue de droit sanitaire et social"],
+["Rev. dr. santé","Revue de droit de la santé"],
+["Rev. dr. U.L.B.","Revue de droit de l'U.L.B."],
+["Rev. dr. étr.","Revue du droit des étrangers"],
+["Rev. eur. envir.","Revue européenne de l'environnement"],
+["Rev. expert","Revue de l'expert"],
+["Rev. faill.","Revue des faillites, concordats et liquidations"],
+["Rev. fisc.","La revue fiscale"],
+["Rev. fr. dr. admin.","Revue française de droit administratif"],
+["Rev. fr. dr. aérien","Revue française de droit aérien"],
+["Rev. gd.","Revue de la gendarmerie"],
+["Rev. gén. ass. terr.","Revue générale des assurances terrestres"],
+["Rev. gén. dr.","Revue générale de droit"],
+["Rev. gén. dr. internat.","Revue générale de droit international public"],
+["Rev. hist. dr.","Revue d'histoire du droit"],
+["Rev. hist. droit","Revue historique de droit français et étranger"],
+["Rev. Inst. soc.","Revue de l'Institut de sociologie de l'Université libre de Bruxelles"],
+["Rev. jur.","Congo Revue juridique du Congo belge"],
+["Rev. jur. comm.","Revue de jurisprudence commerciale"],
+["Rev. jur. environ.","Revue juridique de l'environnement"],
+["Rev. march. uniq. eur.","Revue du marché unique européen"],
+["Rev. not. belge","Revue du notariat belge"],
+["Rev. prat. not.","Revue pratique du notariat"],
+["Rev. prat. soc.","Revue pratique des sociétés civiles et commerciales"],
+["Rev. rw.","Revue van de rijkswacht"],
+["Rev. sc. crim.","Revue de science criminelle et de droit pénal comparé"],
+["Rev. sc. fin.","Revue de science financière"],
+["Rev. T.V.A.","Revue de la T.V.A."],
+["Rev. trav.","Revue du travail"],
+["Rev. trim. dr. civ.","Revue trimestrielle de droit civil"],
+["Rev. trim. dr. com.","Revue trimestrielle de droit commercial et de droit économique"],
+["Rev. trim. dr. eur.","Revue trimestrielle de droit européen"],
+["Rev. trim. dr. fam.","Revue trimestrielle de droit familial"],
+["Rev. trim. dr. h.","Revue trimestrielle des droits de l'homme"],
+["Rev. Trés.","Revue du Trésor"],
+["Rev. U.L.B.","Revue de l'Université de Bruxelles"],
+["Rev. urb.","Revue juridique et économique de l'urbanisme et de l'environnement"],
+["Rev. dr. ULg.","Revue de la Faculté de droit de l'Université de Liège"],
+["R .D.E.","Revue du droit des étrangers"],
+["Rép. fisc.","Répertoire fiscal"],
+["Soc. kron.","Sociaalrechtelijke kronieken"],
+["social. Droit du travail","Compendium social. Droit du travail"],
+["Stn. J.C.R.C.L.","Stanford Journal of Civil Rights and Civil Liberties"],
+["T. agr. r.","Tijdschrift voor agrarisch recht"],
+["T. ann.","Tijdschrift voor aannemingsrecht"],
+["T. app.","Tijdschrift voor appartements en immorecht"],
+["T. bankw.","Tijdschrift voor het bankwezen"],
+["T. gem.","Tijdschrift voor gemeenterecht"],
+["T. gez.","Tijdschrift voor gezondheidsrecht"],
+["T. mil. strafr.","Tijdschrift voor militair strafrecht en oorlogsrecht"],
+["T. Not.","Tijdschrift voor notarissen"],
+["T. rechtsgesch.","Tijdschrift voor rechtsgeschiedenis"],
+["T. rechtsh.","Tijdschrift voor rechtshulp"],
+["T. soc. wetensch.","Tijdschrift voor sociale wetenschappen"],
+["T. sport.","Tijdschrift voor sportrecht"],
+["T. strafr.","Tijdschrift voor strafrecht. Jurisprudentie, nieuwe wetgeving en doctrine voor de praktijk"],
+["T. vred.","Tijdschrift van de vrede- en politierechters"],
+["T. vreemd.","Tijdschrift voor vreemdelingenrecht"],
+["T. wrr.","Tijdschrift van de werkrechtersraden"],
+["T.A.V.W.","Tijdschrift voor aansprakelijkheid en verzekering in het wegverkeer"],
+["T.B.B.R.","Tijdschrift voor Belgisch burgerlijk recht"],
+["T.B.H.","Tijdschrift voor Belgisch handelsrecht"],
+["T.B.O.","Tijdschrift voor bouwrecht en onroerend goed"],
+["T.B.P.","Tijdschrift voor bestuurswetenschappen en publiekrecht"],
+["T.E.P.","Tijdschrift estate planning"],
+["T.F.R.","Tijdschrift voor fiscaal recht"],
+["T.G.R.","Tijdschrift voor Gentse rechtspraak"],
+["T.G.R./T.W.V.R.","Tijdschrift voor Gentse en West- Vlaamse Rechtspraak"],
+["T.J.K.","Tijdschrift voor jeugdrecht en kinderrechten"],
+["T.M.R.","Tijdschrift voor milieurecht"],
+["T.O.R.B.","Tijdschrift voor onderwijsrecht en onderwijsbeleid"],
+["T.P.R.","Tijdschrift voor privaatrecht"],
+["T.R.D.","Tijdschrift Rechtsdocumentatie"],
+["T.R.O.S.","Tijdschrift voor ruimtelijke ordening en stedenbouw"],
+["T.R.V.","Tijdschrift voor rechtspersonen en vennootschap"],
+["T.S.R.","Tijdschrift voor sociaal recht"],
+["T.V.B.R.","Tijdschrift voor Brugse rechtspraak"],
+["T. Fam.","Tijdschrift voor familierecht"],
+["Trav. Com. ét. et lég. not.","Travaux du Comité d'études et de législation du notariat"],
+["Trav. conf. U.L.B.","Travaux et conférences de la Faculté de Droit de l'Université libre de Bruxelles"],
+["Verkeersrecht","Verkeersrecht Jurisprudentie"],
+["Vl. T. Gez.","Vlaams tijdschrift voor gezondheidsrecht v° verbo (mot-clé d'un répertoire)"],
+["Vr. Ant.","Bulletin van vragen en antwoorden"],
+["Y.H.R.D.L.J.","Yale Human Rights and Development Law Journal"],
+["Yearb. Eur. Conv. Hum. R.","Yearbook of the european Convention on human rights"]
+];
+/* index de recherche */
+const ABBR_SET=new Set(REVUES.map(r=>r[0].toLowerCase()));
+const NAME2ABBR={};REVUES.forEach(r=>NAME2ABBR[r[1].toLowerCase()]=r[0]);
+/* datalist : le champ propose le nom complet ET l'abréviation */
+(function(){
+  const dl=document.getElementById('revues-datalist');
+  let h='';
+  REVUES.forEach(r=>{h+=`<option value="${r[0]}">${r[1]}</option>`;h+=`<option value="${r[1]}">${r[0]}</option>`;});
+  dl.innerHTML=h;
+})();
+/* résout une saisie (abréviation OU nom complet) -> {abbr, sug} */
+function resolveRevue(v){
+  v=(v||'').trim();if(!v) return {abbr:'',sug:''};
+  const low=v.toLowerCase();
+  if(ABBR_SET.has(low)){const r=REVUES.find(x=>x[0].toLowerCase()===low);return {abbr:r[0],sug:''};}
+  if(NAME2ABBR[low]) return {abbr:NAME2ABBR[low],sug:'Abréviation : '+NAME2ABBR[low]};
+  // correspondance partielle sur le nom complet
+  const hit=REVUES.find(x=>x[1].toLowerCase().includes(low)&&low.length>=4);
+  if(hit) return {abbr:hit[0],sug:'Abréviation suggérée : '+hit[0]+' ('+hit[1]+')'};
+  return {abbr:v,sug:'Revue non répertoriée — l\'abréviation saisie sera utilisée telle quelle.'};
+}
+
+/* Abréviations de chambre (Guide, p. 209 et s.) */
+const CHAMBRE_MAP={
+  "chambre":"ch.","chambres":"ch.",
+  "référé":"réf.","référés":"réf.","des référés":"réf.","du référé":"réf.",
+  "saisie":"sais.","saisies":"sais.","des saisies":"sais.","chambre des saisies":"sais.",
+  "jeunesse":"jeun.","de la jeunesse":"jeun.","chambre de la jeunesse":"jeun.",
+  "mises en accusation":"mis. acc.","des mises en accusation":"mis. acc.","chambre des mises en accusation":"mis. acc.",
+  "vacations":"vac.","des vacations":"vac.","chambre des vacations":"vac.",
+  "conseil":"ch. cons.","chambre du conseil":"ch. cons.","du conseil":"ch. cons.",
+  "fiscale":"fisc.","chambre fiscale":"fisc.",
+  "juge d'instruction":"j. instr.","instruction":"j. instr.",
+  "bureau d'assistance judiciaire":"bur. ass. jud.",
+  "assemblée générale":"ass. gén.","ass. générale":"ass. gén."
+};
+function normChambre(raw){
+  let s=(raw||'').trim();if(!s) return {out:'',sug:''};
+  const low=s.toLowerCase().replace(/’/g,"'");
+  if(CHAMBRE_MAP[low]){return {out:CHAMBRE_MAP[low],sug: low!==CHAMBRE_MAP[low]?'Abréviation appliquée : '+CHAMBRE_MAP[low]:''};}
+  // remplacements mot à mot (ex. "1re chambre" -> "1re ch.", "chambre des saisies" déjà couvert)
+  let out=s, changed=false;
+  const rules=[
+    [/\bchambre des saisies\b/gi,"sais."],
+    [/\bchambre des mises en accusation\b/gi,"mis. acc."],
+    [/\bchambre de la jeunesse\b/gi,"jeun."],
+    [/\bchambre des vacations\b/gi,"vac."],
+    [/\bchambre du conseil\b/gi,"ch. cons."],
+    [/\bchambre fiscale\b/gi,"fisc."],
+    [/\bréférés?\b/gi,"réf."],
+    [/\bsaisies?\b/gi,"sais."],
+    [/\bmises en accusation\b/gi,"mis. acc."],
+    [/\bvacations?\b/gi,"vac."],
+    [/\bjeunesse\b/gi,"jeun."],
+    [/\bchambres?\b/gi,"ch."]
+  ];
+  rules.forEach(([re,rep])=>{if(re.test(out)){out=out.replace(re,rep);changed=true;}});
+  out=out.replace(/\s+/g,' ').trim();
+  return {out, sug: changed&&out!==s?'Abréviation appliquée : '+out:''};
+}
+
+/* ===================== OUTILS ===================== */
+const MOIS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+function dateFR(v){if(!v)return"";const[a,m,j]=v.split("-").map(Number);if(!a||!m||!j)return"";return j+" "+MOIS[m-1]+" "+a;}
+function yearOf(v){if(!v)return"";return v.split("-")[0];}
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function val(id){const e=document.getElementById(id);return e?e.value.trim():"";}
+
+/* Nom d'auteur : minuscules avec majuscule initiale ; initiales conservées en majuscules */
+function fmtAuteur(raw){
+  let s=(raw||'').trim();if(!s)return'';
+  return s.split(/\s+/).map(tok=>{
+    // initiale type "A." ou "A.B." ou "A"
+    if(/^([A-Za-zÀ-ÿ]\.?){1,3}$/.test(tok) && tok.replace(/\./g,'').length<=3 && /\./.test(tok)){
+      return tok.toUpperCase();
+    }
+    if(tok.length<=2 && !/[aeiouy]/i.test(tok)){ return tok.toUpperCase()+ (tok.endsWith('.')?'':''); }
+    // mot normal : 1re lettre maj, reste min ; gère traits d'union
+    return tok.split('-').map(w=>w? w.charAt(0).toUpperCase()+w.slice(1).toLowerCase():w).join('-');
+  }).join(' ');
+}
+
+/* Chambre : applique les abréviations puis met le « e » ordinal en exposant.
+   Un chiffre seul (ex. « 2 ») devient « 2e ch. » ; « 1 » devient « 1re ch. ». */
+function chamberFmt(raw){
+  let r=normChambre(raw);
+  let out=(r.out||'').trim();
+  if(!out) return {html:'',text:'',sug:''};
+  // si commence par un nombre et ne contient pas déjà « ch » : ajouter « ch. »
+  if(/^\d/.test(out) && !/\bch\b|\bch\./i.test(out)) out=out+' ch.';
+  let html=esc(out);
+  // ordinaux avec suffixe explicite : 1re/1ère -> 1^re ; Ne/Ner/Nème -> N^e
+  html=html.replace(/(\d+)(ère|ème|eme|er|re|e)\b/g,(m,d)=> d+'<sup>'+(d==='1'?'re':'e')+'</sup>');
+  // nombre nu suivi de « ch. » sans suffixe (ex. « 2 ch. ») -> N^e
+  html=html.replace(/(\d+)(?=\s+ch\.)/g,(m,d)=> d+'<sup>'+(d==='1'?'re':'e')+'</sup>');
+  const text=html.replace(/<[^>]+>/g,'');
+  return {html,text,sug: text!==(raw||'').trim()?'Chambre : '+text:''};
+}
+
+/* ===================== BLOC REVUE (partagé) ===================== */
+function buildRevueBlock(prefix){
+  return `
+    <label>Revue <span class="hint">(abréviation ou nom complet — mise en italique)</span></label>
+    <input type="text" id="${prefix}-revue" list="revues-datalist" placeholder="ex. J.L.M.B.  ou  Journal des tribunaux" autocomplete="off">
+    <p class="suggest" id="${prefix}-revue-sug"></p>
+    <div class="row">
+      <div><label>Année de la revue</label><input type="text" id="${prefix}-annee" placeholder="ex. 2024"></div>
+      <div><label>N° de livraison <span class="hint">(fac.)</span></label><input type="text" id="${prefix}-livr" placeholder="ex. 4"></div>
+      <div><label>Page ou numéro <span class="hint">(ex. R.G.A.R.)</span></label><input type="text" id="${prefix}-page" placeholder="ex. 45"></div>
+    </div>
+    <label>Tome / partie <span class="hint">(ex. Pasicrisie : chiffre romain ; facultatif)</span></label>
+    <input type="text" id="${prefix}-tome" placeholder="ex. I">
+  `;
+}
+['oj','cc','ce'].forEach(p=>{document.getElementById(p+'-revue-block').innerHTML=buildRevueBlock(p);});
+['oj','cc','ce'].forEach(p=>{
+  const inp=document.getElementById(p+'-revue');
+  inp.addEventListener('input',()=>{document.getElementById(p+'-revue-sug').textContent=resolveRevue(inp.value).sug;});
+});
+/* suggestion chambre en direct */
+['oj','ce'].forEach(p=>{
+  const inp=document.getElementById(p+'-ch');
+  inp.addEventListener('input',()=>{document.getElementById(p+'-ch-sug').textContent=chamberFmt(inp.value).sug;});
+});
+
+function segRevue(prefix){
+  const {abbr}=resolveRevue(val(prefix+'-revue'));
+  if(!abbr) return '';
+  let s=', <em>'+esc(abbr)+'</em>';
+  const annee=val(prefix+'-annee'),livr=val(prefix+'-livr'),tome=val(prefix+'-tome'),page=val(prefix+'-page');
+  if(annee) s+=', '+esc(annee)+(livr?'/'+esc(livr):'');
+  if(tome) s+=', '+esc(tome);
+  if(page) s+=', p. '+esc(page);
+  return s;
+}
+
+/* ===================== NAVIGATION NIVEAUX ===================== */
+function showOnly(id){['levels','wip','national'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));}
+document.querySelectorAll('[data-level]').forEach(b=>b.addEventListener('click',()=>{
+  const lv=b.dataset.level;
+  if(lv==='nationale'){showOnly('national');}
+  else{document.getElementById('wip-title').textContent=lv==='europeenne'?'Jurisprudence européenne — en construction':'Jurisprudence internationale — en construction';showOnly('wip');}
+  window.scrollTo(0,0);
+}));
+document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>{showOnly('levels');window.scrollTo(0,0);}));
+
+/* onglets */
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  document.querySelectorAll('.tabpane').forEach(p=>p.style.display='none');
+  document.getElementById('pane-'+t.dataset.tab).style.display='block';
+}));
+
+/* ===================== ORDRE JUDICIAIRE ===================== */
+const OJ={
+  cassation:{abbr:'Cass.',ville:false},
+  appel:{abbr:'',ville:true,cityOnly:true,villeLabel:"Ville de la cour d'appel",villeHint:'Anvers, Bruxelles, Gand, Liège ou Mons'},
+  ctrav:{abbr:'C. trav.',ville:true,villeLabel:'Siège (ville)',villeHint:'Anvers, Bruxelles, Gand, Liège ou Mons',div:true,lang:true},
+  assises:{abbr:'Cour ass.',ville:true,villeLabel:'Province'},
+  civ:{abbr:'Civ.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
+  corr:{abbr:'Corr.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
+  tribfam:{abbr:'Trib. fam.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
+  tribjeun:{abbr:'Trib. jeun.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
+  tap:{abbr:'T.A.P.',ville:true,villeLabel:'Siège'},
+  tribentr:{abbr:'Trib. entr.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
+  comm:{abbr:'Comm.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
+  tribtrav:{abbr:'Trib. trav.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
+  pol:{abbr:'Pol.',ville:true,div:true,lang:true,villeLabel:'Siège'},
+  jp:{abbr:'J.P.',ville:true,cant:true,siege:true,villeLabel:'Canton',villeHint:'ex. Mons ou Audenarde-Kruishoutem'},
+  tribarr:{abbr:'Trib. arr.',ville:true,villeLabel:'Siège'}
+};
+function ojRefresh(){
+  const cfg=OJ[document.getElementById('oj-type').value];
+  const show=(id,b)=>document.getElementById(id).classList.toggle('show',!!b);
+  show('oj-ville-f',cfg.ville);show('oj-lang-f',cfg.lang);show('oj-div-f',cfg.div);
+  show('oj-cant-f',cfg.cant);show('oj-siege-f',cfg.siege);
+  if(cfg.ville){document.getElementById('oj-ville-l').innerHTML=(cfg.villeLabel||'Ville / siège')+' <span class="hint">(en toutes lettres)</span>';document.getElementById('oj-ville-sub').textContent=cfg.villeHint||'';}
+}
+document.getElementById('oj-type').addEventListener('change',ojRefresh);ojRefresh();
+
+document.querySelectorAll('input[name=ojmode]').forEach(r=>r.addEventListener('change',()=>{
+  document.querySelectorAll('#oj-mode label').forEach(l=>l.classList.remove('sel'));r.closest('label').classList.add('sel');
+  document.getElementById('oj-revue-block').classList.toggle('show',r.value==='revue');
+  document.getElementById('oj-net-block').classList.toggle('show',r.value==='net');
+  document.getElementById('oj-ined-block').classList.toggle('show',r.value==='ined');
+}));
+
+function showErr(p,m){const e=document.getElementById(p+'-err');e.textContent=m;e.classList.add('show');document.getElementById(p+'-result').classList.remove('show');}
+function clearErr(p){document.getElementById(p+'-err').classList.remove('show');}
+function output(p,html){document.getElementById(p+'-ref').innerHTML=html;document.getElementById(p+'-result').classList.add('show');}
+
+function segMP(){
+  const nat=val('oj-mp-nat');if(!nat) return '';
+  const fct=val('oj-mp-fct'),nom=fmtAuteur(val('oj-mp-nom'));
+  let s=', '+nat;if(fct)s+=' '+fct;if(nom)s+=' '+esc(nom);return s;
+}
+function segNote(tId,nId){
+  const t=val(tId);if(!t) return '';
+  const n=fmtAuteur(val(nId));
+  return ', '+t+(n?' '+esc(n):'');
+}
+
+function genOJ(){
+  clearErr('oj');
+  const cfg=OJ[document.getElementById('oj-type').value];
+  const ville=val('oj-ville');
+  const date=dateFR(val('oj-date'));
+  if(!date) return showErr('oj','Veuillez indiquer la date du prononcé.');
+  if(cfg.cityOnly&&!ville) return showErr('oj','Veuillez indiquer la ville de la cour d\'appel.');
+  let base;
+  if(cfg.cityOnly){base=esc(ville);}
+  else{base=cfg.abbr;if(cfg.lang){const lg=val('oj-lang');if(lg)base+=' '+lg;}if(cfg.ville&&ville)base+=' '+esc(ville);}
+  let after='';
+  if(cfg.div){const d=val('oj-div');if(d)after+=', div. '+esc(d);}
+  if(cfg.cant){const c=val('oj-cant');if(c)after+=', '+esc(c);}
+  if(cfg.siege){const sg=val('oj-siege');if(sg){const el=/^[aeiouyàâäéèêëîïôöûü]/i.test(sg)?"d'":"de ";after+=', siège '+el+esc(sg);}}
+  const chf=chamberFmt(val('oj-ch'));
+  const cham=chf.html?' ('+chf.html+')':'';
+  let ref=base+after+cham+', '+esc(date);
+  const mode=document.querySelector('input[name=ojmode]:checked').value;
+  if(mode==='revue'){
+    const {abbr}=resolveRevue(val('oj-revue'));
+    if(!abbr) return showErr('oj','Veuillez indiquer la revue (ou changez le lieu de publication).');
+    ref+=segRevue('oj');
+  } else if(mode==='net'){
+    const rg=val('oj-rg'),site=val('oj-site');
+    if(rg)ref+=', R.G. n° '+esc(rg);if(site)ref+=', disponible sur '+esc(site);
+  } else {
+    const rg=val('oj-rg2');ref+=', inéd.'+(rg?', R.G. n° '+esc(rg):'');
+  }
+  ref+=segMP();
+  ref+=segNote('oj-note-t','oj-note-n');
+  if(document.getElementById('oj-somm').checked) ref+=' (somm.)';
+  if(!/\.$/.test(ref)) ref+='.';
+  output('oj',ref);
+}
+
+/* ===================== COUR CONSTITUTIONNELLE ===================== */
+function genCC(){
+  clearErr('cc');
+  const denom=val('cc-denom');
+  const dv=val('cc-date'),date=dateFR(dv);
+  let num=val('cc-num');
+  if(!date) return showErr('cc','Veuillez indiquer la date de l\'arrêt.');
+  if(!num) return showErr('cc','Veuillez indiquer le numéro d\'arrêt.');
+  // ajout /année si omis
+  if(!/\//.test(num)){const y=yearOf(dv);if(y)num=num+'/'+y;}
+  let ref=denom+', '+esc(date)+', n°'+esc(num);
+  const pass=val('cc-pass');if(pass)ref+=', '+esc(pass);
+  ref+=segRevue('cc');
+  ref+=segNote('cc-note-t','cc-note-n');
+  if(!/\.$/.test(ref)) ref+='.';
+  output('cc',ref);
+}
+
+/* ===================== CONSEIL D'ÉTAT ===================== */
+function ceNum(n){
+  n=n.replace(/\s/g,'');
+  if(/^\d+$/.test(n)&&n.length>3){ // insérer les points de milliers
+    n=n.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  }
+  return n;
+}
+function genCE(){
+  clearErr('ce');
+  const date=dateFR(val('ce-date'));
+  let num=val('ce-num');
+  if(!date) return showErr('ce','Veuillez indiquer la date de l\'arrêt.');
+  if(!num) return showErr('ce','Veuillez indiquer le numéro d\'arrêt.');
+  num=ceNum(num);
+  let ref='C.E.';
+  const chf=chamberFmt(val('ce-ch'));if(chf.html)ref+=' ('+chf.html+')';
+  ref+=', '+esc(date)+', n°'+esc(num);
+  let req='';
+  if(document.getElementById('ce-anon').checked){req='X';}
+  else{
+    const raw=val('ce-req');
+    if(raw){
+      const noms=raw.split(',').map(s=>fmtAuteur(s.trim())).filter(Boolean);
+      if(noms.length===1)req=noms[0];
+      else if(noms.length<=3)req=noms.join(' et ');
+      else req=noms[0]+' et crts.';
+    }
+  }
+  if(req)ref+=', '+esc(req);
+  const pass=val('ce-pass');if(pass)ref+=', '+esc(pass);
+  // avis de l'auditeur (toujours un « avis »)
+  const fct=val('ce-mp-fct');
+  if(fct){const nom=fmtAuteur(val('ce-mp-nom'));ref+=', avis '+fct+(nom?' '+esc(nom):'');}
+  // publication en ligne : le site du Conseil d'État n'est pas reproduit
+  const site=val('ce-site');
+  if(site && !/(raadvst-consetat|conseildetat|raadvst|consetat)\.be/i.test(site)){
+    ref+=', disponible sur '+esc(site);
+  }
+  ref+=segRevue('ce');
+  ref+=segNote('ce-note-t','ce-note-n');
+  if(!/\.$/.test(ref)) ref+='.';
+  output('ce',ref);
+}
+
+document.querySelectorAll('[data-gen]').forEach(b=>b.addEventListener('click',()=>{
+  const p=b.dataset.gen;if(p==='oj')genOJ();else if(p==='cc')genCC();else genCE();
+}));
+
+/* ===================== EFFACER ===================== */
+document.querySelectorAll('[data-reset]').forEach(b=>b.addEventListener('click',()=>{
+  const pane=document.getElementById(b.dataset.reset);
+  pane.querySelectorAll('input[type=text],input[type=date]').forEach(i=>i.value='');
+  pane.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  pane.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
+  pane.querySelectorAll('.suggest').forEach(s=>s.textContent='');
+  pane.querySelectorAll('.result').forEach(r=>r.classList.remove('show'));
+  pane.querySelectorAll('.err').forEach(e=>e.classList.remove('show'));
+  const mode=pane.querySelector('input[name=ojmode][value=revue]');
+  if(mode){mode.checked=true;mode.dispatchEvent(new Event('change'));}
+  if(pane.id==='pane-oj'){document.getElementById('oj-type').selectedIndex=0;ojRefresh();}
+}));
+
+/* ===================== COPIE ===================== */
+document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{
+  const el=document.getElementById(b.dataset.copy);
+  try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([el.innerHTML],{type:'text/html'}),'text/plain':new Blob([el.textContent],{type:'text/plain'})})]);flash(b);}
+  catch(e){try{await navigator.clipboard.writeText(el.textContent);flash(b);}catch(_){alert('Copie impossible dans ce navigateur.');}}
+}));
+document.querySelectorAll('[data-copytxt]').forEach(b=>b.addEventListener('click',async()=>{
+  const el=document.getElementById(b.dataset.copytxt);
+  try{await navigator.clipboard.writeText(el.textContent);flash(b);}catch(_){alert('Copie impossible.');}
+}));
+function flash(b){const t=b.textContent;b.textContent='✓ Copié !';b.classList.add('done');setTimeout(()=>{b.textContent=t;b.classList.remove('done');},1500);}
+</script>
+</body>
+</html>

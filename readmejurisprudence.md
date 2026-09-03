@@ -132,10 +132,14 @@ Exemples produits par l'outil :
 
 ## Choix de la revue
 
-Le champ « Revue » accepte **deux modes de saisie** :
+Le champ « Revue » propose **deux boutons de tri** de la liste déroulante (comme dans l'assistant *Doctrine*) :
 
-- l'**abréviation** directement (liste exhaustive du Guide, p. 239 — proposée en autocomplétion) ;
-- le **nom complet** de la revue (Guide, p. 209) : l'outil affiche alors l'**abréviation suggérée** et l'utilise dans la référence.
+- **Liste classée par abréviation** — la liste est triée par abréviation, on tape l'abréviation ;
+- **Liste classée par nom** — la liste est triée par nom complet, on tape le nom.
+
+Quel que soit le tri, la saisie est résolue dans les deux sens : l'**abréviation** directement (liste du Guide, p. 239) ou le **nom complet** (Guide, p. 209), l'outil affichant alors l'**abréviation suggérée** et l'utilisant dans la référence.
+
+Lorsqu'une décision est publiée **dans une revue**, la **page (ou le numéro)** est obligatoire : l'outil refuse de générer la référence tant qu'elle n'est pas renseignée (dans les trois onglets).
 
 La liste embarquée reprend l'ensemble des périodiques du Guide (près de **300 revues**, listes des p. 209 et 239), dont la nouvelle **R.F.R.L. — Revue de fiscalité régionale et locale**. Toute abréviation non répertoriée saisie par l'utilisateur est reprise telle quelle.
 
@@ -167,6 +171,14 @@ Les abréviations et les revues sont extraites de la liste du Guide (Livre III, 
 - Application **100 % client-side** : un seul fichier HTML, sans dépendance externe, sans serveur.
 - Compatible avec tous les navigateurs modernes (Chrome, Firefox, Edge, Safari).
 - Aucune donnée n'est transmise à un tiers.
+
+## Revues : deux voies d'entrée
+
+Le champ **Revue** accepte indifféremment l'**abréviation** (`J.L.M.B.`) ou le **nom complet** (`Revue de jurisprudence de Liège, Mons et Bruxelles`) ; la liste déroulante propose les deux, et la saisie **sans les points** (`jlmb`, `JLMB`, `j l m b`) est reconnue et restituée sous la forme officielle `J.L.M.B.`.
+
+## Mentions
+
+Un **avertissement** en bas de page rappelle de vérifier la référence dans le Guide (Kluwer, 2017) et de s'y reporter pour les cas très particuliers. La mention « Application **pensée par Isabelle Lemineur**, Maître de conférences en Méthodologie juridique à l'UMons et Maître assistant à la HE2B » figure en pied de page.
 
 ---
 

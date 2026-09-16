@@ -217,7 +217,7 @@
         <div class="sect-title">Note / observations <span class="hint" style="text-transform:none">(facultatif)</span></div>
         <div class="row">
           <div><label>Type</label><select id="oj-note-t"><option value="">(aucune)</option><option value="note">note</option><option value="obs.">obs.</option></select></div>
-          <div><label>Initiale du prénom + nom <span class="hint">(laisser vide si inconnu → « note » seul)</span></label><input type="text" id="oj-note-n" placeholder="ex. C. Van Severen"></div>
+          <div><label>Auteur(s) <span class="hint">(prénom réduit à l'initiale ; vide si anonyme ; plusieurs auteurs séparés par « ; »)</span></label><input type="text" id="oj-note-n" placeholder="ex. Xavier Dehon  ou  X. Dehon ; Y. Martin"></div>
         </div>
       </div>
 
@@ -249,7 +249,7 @@
         <div class="revue-block" id="cc-revue-block"></div>
         <div class="row">
           <div><label>Note / obs.</label><select id="cc-note-t"><option value="">(aucune)</option><option value="note">note</option><option value="obs.">obs.</option></select></div>
-          <div><label>Initiale du prénom + nom <span class="hint">(laisser vide si inconnu)</span></label><input type="text" id="cc-note-n" placeholder="ex. A. Coppens"></div>
+          <div><label>Auteur(s) <span class="hint">(prénom réduit à l'initiale ; vide si anonyme ; plusieurs auteurs séparés par « ; »)</span></label><input type="text" id="cc-note-n" placeholder="ex. Alain Coppens  ou  A. Coppens"></div>
         </div>
       </div>
       <div class="actions">
@@ -303,7 +303,7 @@
         <div class="revue-block" id="ce-revue-block"></div>
         <div class="row">
           <div><label>Note / obs.</label><select id="ce-note-t"><option value="">(aucune)</option><option value="note">note</option><option value="obs.">obs.</option></select></div>
-          <div><label>Initiale du prénom + nom <span class="hint">(laisser vide si inconnu)</span></label><input type="text" id="ce-note-n" placeholder="ex. C. Van Severen"></div>
+          <div><label>Auteur(s) <span class="hint">(prénom réduit à l'initiale ; vide si anonyme ; plusieurs auteurs séparés par « ; »)</span></label><input type="text" id="ce-note-n" placeholder="ex. Xavier Dehon ; Yves Martin"></div>
         </div>
       </div>
       <div class="actions">
@@ -711,18 +711,71 @@ function yearOf(v){if(!v)return"";return v.split("-")[0];}
 function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function val(id){const e=document.getElementById(id);return e?e.value.trim():"";}
 
-/* Nom d'auteur : minuscules avec majuscule initiale ; initiales conservées en majuscules */
-function fmtAuteur(raw){
+/* capNom : met chaque mot en minuscules avec majuscule initiale (gère traits d'union).
+   Utilisé pour les REQUÉRANTS du Conseil d'État (aucune réduction en initiale). */
+function capWord(w){return w?w.split('-').map(x=>x?x.charAt(0).toUpperCase()+x.slice(1).toLowerCase():x).join('-'):w;}
+function capNom(raw){
   let s=(raw||'').trim();if(!s)return'';
   return s.split(/\s+/).map(tok=>{
-    // initiale type "A." ou "A.B." ou "A"
-    if(/^([A-Za-zÀ-ÿ]\.?){1,3}$/.test(tok) && tok.replace(/\./g,'').length<=3 && /\./.test(tok)){
-      return tok.toUpperCase();
-    }
-    if(tok.length<=2 && !/[aeiouy]/i.test(tok)){ return tok.toUpperCase()+ (tok.endsWith('.')?'':''); }
-    // mot normal : 1re lettre maj, reste min ; gère traits d'union
-    return tok.split('-').map(w=>w? w.charAt(0).toUpperCase()+w.slice(1).toLowerCase():w).join('-');
+    if(/\./.test(tok)) return tok.toUpperCase(); // initiales -> majuscules
+    return capWord(tok);
   }).join(' ');
+}
+
+/* --- Auteurs de notes / observations / ministère public ---
+   Règles du Guide :
+   1. prénom complet -> réduit à l'initiale (majuscule) + nom (minuscules, 1re lettre maj) ;
+   2. signature en initiales -> conservée telle quelle ;
+   3. note anonyme -> rien (champ vide -> chaîne vide) ;
+   4. prénom à consonnes initiales multiples -> le groupe est conservé (Chr., Ph., Fl., Th., Fr., Ch., Cl.…) ;
+   5. plusieurs auteurs -> séparés par des virgules, le dernier par « et ». */
+const VOY="aeiouyàâäéèêëîïôöûüh"; // h muet inclus pour l'arrêt du groupe consonantique initial
+/* réduit un prénom complet (sans point) à son groupe de consonnes initiales + « . » */
+function abbrevPrenom(word){
+  if(!word) return '';
+  if(/\./.test(word)) return normInit(word); // déjà abrégé -> normaliser la casse
+  // trait d'union : chaque composante réduite (Jean-Claude -> J.-Cl.)
+  if(word.includes('-')) return word.split('-').map(abbrevPrenom).join('-');
+  let cluster='';
+  for(const ch of word){
+    if('aeiouyàâäéèêëîïôöûüAEIOUYÀÂÄÉÈÊËÎÏÔÖÛÜ'.indexOf(ch)===-1 && /[a-zà-ÿ'’]/i.test(ch)){cluster+=ch;}
+    else break;
+  }
+  if(!cluster) cluster=word.charAt(0); // prénom commençant par une voyelle
+  return cluster.charAt(0).toUpperCase()+cluster.slice(1).toLowerCase()+'.';
+}
+/* normalise la casse d'un token déjà abrégé.
+   Une lettre est en majuscule si elle débute le token ou suit un point / trait d'union
+   (nouvelle initiale) ; les autres lettres du groupe sont en minuscules.
+   Ex. « chr. » -> « Chr. », « x.d. » -> « X.D. », « j.-c. » -> « J.-C. », « ph. » -> « Ph. ». */
+function normInit(tok){
+  let out='',boundary=true;
+  for(const ch of tok){
+    if(/[a-zà-ÿ]/i.test(ch)){out+=boundary?ch.toUpperCase():ch.toLowerCase();boundary=false;}
+    else{out+=ch;if(ch==='.'||ch==='-')boundary=true;}
+  }
+  return out;
+}
+/* formate UN auteur « prénom nom » */
+function fmtAuteurUn(raw){
+  let s=(raw||'').trim();if(!s)return'';
+  const toks=s.split(/\s+/);
+  const isInit=t=>/\./.test(t)||/^[A-Za-zÀ-ÿ]$/.test(t);
+  // Règle 2 : tout est en initiales -> signature, on conserve
+  if(toks.every(isInit)) return toks.map(normInit).join(' ');
+  // Prénom(s) + nom
+  let i=0,pren=[];
+  if(/\./.test(toks[0])){ while(i<toks.length && /\./.test(toks[i])){pren.push(normInit(toks[i]));i++;} }
+  else { pren.push(abbrevPrenom(toks[0])); i=1; }
+  const nom=toks.slice(i).map(capWord).join(' ');
+  return (pren.join(' ')+(nom?' '+nom:'')).trim();
+}
+/* formate un ou plusieurs auteurs (Règle 5) */
+function fmtAuteurs(raw){
+  let s=(raw||'').trim();if(!s)return'';
+  let parts=s.split(/\s*;\s*|\s*,\s*|\s+et\s+|\s*&\s*/i).map(x=>x.trim()).filter(Boolean).map(fmtAuteurUn).filter(Boolean);
+  if(parts.length<=1) return parts[0]||'';
+  return parts.slice(0,-1).join(', ')+' et '+parts[parts.length-1];
 }
 
 /* Chambre : applique les abréviations puis met le « e » ordinal en exposant.
@@ -852,12 +905,12 @@ function output(p,html){document.getElementById(p+'-ref').innerHTML=html;documen
 
 function segMP(){
   const nat=val('oj-mp-nat');if(!nat) return '';
-  const fct=val('oj-mp-fct'),nom=fmtAuteur(val('oj-mp-nom'));
+  const fct=val('oj-mp-fct'),nom=fmtAuteurs(val('oj-mp-nom'));
   let s=', '+nat;if(fct)s+=' '+fct;if(nom)s+=' '+esc(nom);return s;
 }
 function segNote(tId,nId){
   const t=val(tId);if(!t) return '';
-  const n=fmtAuteur(val(nId));
+  const n=fmtAuteurs(val(nId));
   return ', '+t+(n?' '+esc(n):'');
 }
 
@@ -939,7 +992,7 @@ function genCE(){
   else{
     const raw=val('ce-req');
     if(raw){
-      const noms=raw.split(',').map(s=>fmtAuteur(s.trim())).filter(Boolean);
+      const noms=raw.split(',').map(s=>capNom(s.trim())).filter(Boolean);
       if(noms.length===1)req=noms[0];
       else if(noms.length<=3)req=noms.join(' et ');
       else req=noms[0]+' et crts.';
@@ -949,7 +1002,7 @@ function genCE(){
   const pass=val('ce-pass');if(pass)ref+=', '+esc(pass);
   // avis de l'auditeur (toujours un « avis »)
   const fct=val('ce-mp-fct');
-  if(fct){const nom=fmtAuteur(val('ce-mp-nom'));ref+=', avis '+fct+(nom?' '+esc(nom):'');}
+  if(fct){const nom=fmtAuteurs(val('ce-mp-nom'));ref+=', avis '+fct+(nom?' '+esc(nom):'');}
   // publication en ligne : le site du Conseil d'État n'est pas reproduit
   const site=val('ce-site');
   if(site && !/(raadvst-consetat|conseildetat|raadvst|consetat)\.be/i.test(site)){

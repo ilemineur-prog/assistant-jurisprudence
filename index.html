@@ -101,7 +101,7 @@
         <span class="badge wip">🚧 En construction</span>
       </button>
       <button class="level-btn" data-level="nationale">
-        <div><h2>Jurisprudence nationale (belge)</h2><p>Ordre judiciaire, Cour constitutionnelle, Conseil d'État</p></div>
+        <div><h2>Jurisprudence nationale (belge)</h2><p>Ordre judiciaire, Cour constitutionnelle, juridictions administratives</p></div>
         <span class="badge go">Disponible →</span>
       </button>
     </div>
@@ -123,7 +123,7 @@
     <div class="tabs" id="tabs">
       <button class="tab active" data-tab="oj">Ordre judiciaire</button>
       <button class="tab" data-tab="cc">Cour constitutionnelle</button>
-      <button class="tab" data-tab="ce">Conseil d'État</button>
+      <button class="tab" data-tab="ce">Juridictions administratives</button>
     </div>
 
     <!-- ORDRE JUDICIAIRE -->
@@ -265,7 +265,12 @@
 
     <!-- CONSEIL D'ÉTAT -->
     <div class="card tabpane" id="pane-ce" style="display:none">
-      <p class="intro">Conseil d'État. Règle — n° 156. Le nom du requérant se met en caractères romains (jamais en italique).</p>
+      <p class="intro">Juridictions administratives. Règle — n° 156. Le référencement est identique pour les deux juridictions ; seule l'abréviation change. Le nom du requérant se met en caractères romains (jamais en italique).</p>
+      <label>Juridiction</label>
+      <select id="ce-jur">
+        <option value="C.E.">Conseil d'État — C.E.</option>
+        <option value="Cons. cont. étr.">Conseil du Contentieux des Étrangers — Cons. cont. étr.</option>
+      </select>
       <label>Chambre <span class="hint">(entre parenthèses ; facultatif — « 11 » → 11ᵉ ch.)</span></label>
       <input type="text" id="ce-ch" placeholder="ex. 11e ch. réf., 11, ass. gén.">
       <p class="suggest" id="ce-ch-sug"></p>
@@ -984,7 +989,7 @@ function genCE(){
   if(!date) return showErr('ce','Veuillez indiquer la date de l\'arrêt.');
   if(!num) return showErr('ce','Veuillez indiquer le numéro d\'arrêt.');
   num=ceNum(num);
-  let ref='C.E.';
+  let ref=val('ce-jur')||'C.E.';
   const chf=chamberFmt(val('ce-ch'));if(chf.html)ref+=' ('+chf.html+')';
   ref+=', '+esc(date)+', n°'+esc(num);
   let req='';

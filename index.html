@@ -156,13 +156,14 @@
       </div>
 
       <div class="field" id="oj-lang-f">
-        <label>Langue (Bruxelles) <span class="hint">— depuis le 31 mars 2014</span></label>
-        <select id="oj-lang"><option value="">(aucune / non Bruxelles)</option><option value="fr.">fr. (francophone)</option><option value="néerl.">néerl. (néerlandophone)</option></select>
+        <label>Tribunal francophone ou néerlandophone <span class="hint">— obligatoire pour une décision bruxelloise postérieure au 31 mars 2014</span></label>
+        <select id="oj-lang"><option value="">— choisir —</option><option value="fr.">fr. (francophone)</option><option value="néerl.">néerl. (néerlandophone)</option></select>
+        <p class="sub">Ex. : Civ. fr. Bruxelles (32<sup>e</sup> ch.), 23 mars 2025…</p>
       </div>
 
       <div class="row">
         <div class="field" id="oj-div-f"><label>Division territoriale <span class="hint">(préfixe « div. »)</span></label><input type="text" id="oj-div" placeholder="ex. Bruges"></div>
-        <div class="field" id="oj-cant-f"><label>N° de canton <span class="hint">(justice de paix)</span></label><input type="text" id="oj-cant" placeholder="ex. 2e cant."></div>
+        <div class="field" id="oj-cant-f"><label>N° de canton <span class="hint">(un chiffre suffit : « 2 » → 2ᵉ cant.)</span></label><input type="text" id="oj-cant" placeholder="ex. 2"></div>
       </div>
       <div class="field" id="oj-siege-f">
         <label>Siège <span class="hint">(cantons à plusieurs sièges — « siège de … »)</span></label>
@@ -348,7 +349,7 @@ const REVUES=[
 ["Ann. Conv. D.H.","Annuaire de la Convention européenne des droits de l'homme"],
 ["Ann. dr.","Annales de droit de Louvain"],
 ["Ann. dr. Lg.","Annales de droit de Liège"],
-["Ann. Fac. dr. Lg.","Annales de la Faculté de droit, d'économie et de sciences sociales de"],
+["Ann. Fac. dr. Lg.","Annales de la Faculté de droit, d'économie et de sciences sociales de Liège"],
 ["Ann. fr. dr. intern.","Annuaire français de droit international"],
 ["Ann. jur. créd.","Annuaire juridique du crédit"],
 ["Ann. jur. créd. règl. coll.","Annuaire juridique du crédit et du règlement collectif de dettes"],
@@ -365,7 +366,7 @@ const REVUES=[
 ["B.R.H.","Belgische rechtspraak in handelszaken"],
 ["B.T.I.R.","Belgisch tijdschrift voor internationaal recht"],
 ["B.T.S.Z.","Belgisch tijdschrift voor sociale zekerheid"],
-["B.T.W. rev. B.T.W. revue (voy.","Revue de la T.V.A.)"],
+["B.T.W. rev.","B.T.W. revue"],
 ["Bull.","Bulletin des arrêts de la Cour de cassation"],
 ["Bull. Acad. R. Sc. O.","Bulletin des séances de l'Académie royale des Sciences d'outre-mer"],
 ["Bull. adm. pénit.","Bulletin de l'administration pénitentiaire"],
@@ -383,7 +384,7 @@ const REVUES=[
 ["Bull. secr. comm.","Bulletin de la Fédération nationale des secrétaires communaux de Belgique"],
 ["Bull. strafinr.","Bulletin van het Bestuur van de strafinrichtingen"],
 ["Bull. trim. b. dr. comp.","Bulletin trimestriel belge de droit comparé"],
-["Bull. dr. h.","Bulletin d'information sur les droits de l'homme"],
+["Bull. dr. h.","Bulletin d'information sur les droits de l'homme"],
 ["C.A.B.G.","Cahiers Antwerpen Brussel Gent"],
 ["C.D.P.K.","Chroniques de droit public"],
 ["C.R.A.","Circulation, responsabilité et assurances"],
@@ -409,13 +410,13 @@ const REVUES=[
 ["Div. act.","Divorce, actualité juridique, sociale & fiscale"],
 ["Doc. Min. Fin.","Documentatieblad Ministerie van Financiën"],
 ["Dr. circ.","Droit de la circulation Jurisprudence"],
-["Dr. et","Ville Droit et Ville"],
+["Dr. et Ville","Droit et Ville"],
 ["Dr. et Rég.","Droit et Région (précédemment Revue régionale de droit)"],
 ["Dr. europ. transp.","Droit européen des transports"],
 ["Dr. fisc.","Droit fiscal"],
 ["Dr. fond.","Droits fondamentaux"],
 ["Dr. inform.","Droit de l'informatique"],
-["Dr. marit. franç.","Droit maritime français Droit pénal et procédure pénale Droit pénal et procédure pénale"],
+["Dr. marit. franç.","Droit maritime français"],
 ["Dr. prat. comm. intern.","Droit et pratique du commerce international"],
 ["Dr. soc.","Droit social"],
 ["E.C.L.R.","European Constitutional Law Review"],
@@ -424,7 +425,7 @@ const REVUES=[
 ["E.J.I.L.","European Journal of International Law"],
 ["E.J.M.L.","European Journal of Migration and Law"],
 ["E.L.J.","European Law Journal"],
-["E.L. Rev.","European Law Review"],
+["E.L. Rev.","European Law Review"],
 ["E.P.C.","Évaluation du préjudice corporel au regard de la jurisprudence"],
 ["Entr. et dr.","L'entreprise et le droit"],
 ["F. J. F.","Fiscale jurisprudentie/Jurisprudence fiscale"],
@@ -436,8 +437,8 @@ const REVUES=[
 ["H.R.L.R","Human Rights Law Review"],
 ["Harv. H.R.J.","Harvard Human Rights Journal"],
 ["I.J. Const. L.","International Journal of Constitutional Law"],
-["I.R.D.I.","Droits intellectuels Ius Interuniversitair studententijdschrift Ius & actores Ius & actores"],
-["Ing.-Cons.","Revue de droit intellectuel. L'ingénieur- Conseil"],
+["I.R.D.I.","Droits intellectuels"],
+["Ing.-Cons.","Revue de droit intellectuel. L'ingénieur-Conseil"],
 ["Intern. Fisc. Act.","Internationale Fiscale Actualiteit Nieuwsbrief"],
 ["Intertax","Intertax (International tax review)"],
 ["J. dr. jeun.","Journal du droit des jeunes"],
@@ -466,16 +467,16 @@ const REVUES=[
 ["Journ. jur.","Journal du juriste"],
 ["Journ. prat. dr. fisc. fin.","Journal pratique de droit fiscal et financier"],
 ["Journ. proc.","Journal des procès"],
-["Juger","Juger (revue de l'Association syndicale des magistrats) Jura Falc. Jura Falconis"],
-["Jur.","Hainaut Revue de jurisprudence du Hainaut"],
-["Jur. comm. Brux.","Jurisprudence commerciale de"],
+["Juger","Juger (revue de l'Association syndicale des magistrats)"],
+["Jur. Hainaut","Revue de jurisprudence du Hainaut"],
+["Jur. comm. Brux.","Jurisprudence commerciale de Bruxelles"],
 ["Jur. comm. Fl.","Jurisprudence commerciale des Flandres"],
-["Jur. dr. soc. B.L.N.","Jurisprudence du droit social Bruxelles- Louvain-Nivelles"],
+["Jur. dr. soc. B.L.N.","Jurisprudence du droit social Bruxelles-Louvain-Nivelles"],
 ["Jur. Niv.","Recueil de la jurisprudence du tribunal de Nivelles"],
 ["Jur. trav. Brux.","Jurisprudence des juridictions du travail de Bruxelles"],
-["Kinderrechtengids.","Commentaren - Regelgeving - Rechtspraak - Nuttige informatie"],
+["KIDS","Kinderrechtengids. Commentaren – Regelgeving – Rechtspraak – Nuttige informatie"],
 ["N.J.W.","Nieuw juridisch weekblad"],
-["N. arbeidsr.","Nieuw arbeidsrecht"],
+["N. arbeidsr.","Nieuw arbeidsrecht"],
 ["NYU. J. Int'l. L&P.","New York University Journal of International Law and Politics"],
 ["Orientations","Orientations. Droit social et gestion du personnel"],
 ["Panopticon","Panopticon"],
@@ -520,9 +521,9 @@ const REVUES=[
 ["R.W.","Rechtskundig Weekblad"],
 ["Rec. C.J.U.E.","Recueil de jurisprudence de la Cour de justice de l'Union européenne"],
 ["Rec. dr. pén.","Recueil de droit pénal"],
-["Rec. gén. enr. not.","Recueil général de l'enregistrement et du notariat"],
+["Rec. gén. enr. not.","Recueil général de l'enregistrement et du notariat"],
 ["Rec. lég. gén.","Recueil de la législation générale en vigueur en Belgique"],
-["Rec. Trib. fonct. publ. UE","Recueil de la jurisprudence du Tribunal de la fonction publique de l'Union européenne"],
+["Rec. Trib. fonct. publ. UE","Recueil de la jurisprudence du Tribunal de la fonction publique de l'Union européenne"],
 ["Rechtsk. T.","Rechtskundig Tijdschrift"],
 ["Rechtspr. Arb. Br.","Rechtspraak van de Arbeidsgerechten van Brussel"],
 ["Rev. acc. trav.","Revue des accidents du travail et de droit industriel et social"],
@@ -561,7 +562,7 @@ const REVUES=[
 ["Rev. hist. dr.","Revue d'histoire du droit"],
 ["Rev. hist. droit","Revue historique de droit français et étranger"],
 ["Rev. Inst. soc.","Revue de l'Institut de sociologie de l'Université libre de Bruxelles"],
-["Rev. jur.","Congo Revue juridique du Congo belge"],
+["Rev. jur. Congo","Revue juridique du Congo belge"],
 ["Rev. jur. comm.","Revue de jurisprudence commerciale"],
 ["Rev. jur. environ.","Revue juridique de l'environnement"],
 ["Rev. march. uniq. eur.","Revue du marché unique européen"],
@@ -577,16 +578,16 @@ const REVUES=[
 ["Rev. trim. dr. com.","Revue trimestrielle de droit commercial et de droit économique"],
 ["Rev. trim. dr. eur.","Revue trimestrielle de droit européen"],
 ["Rev. trim. dr. fam.","Revue trimestrielle de droit familial"],
-["Rev. trim. dr. h.","Revue trimestrielle des droits de l'homme"],
+["Rev. trim. dr. h.","Revue trimestrielle des droits de l'homme"],
 ["Rev. Trés.","Revue du Trésor"],
 ["Rev. U.L.B.","Revue de l'Université de Bruxelles"],
 ["Rev. urb.","Revue juridique et économique de l'urbanisme et de l'environnement"],
-["Rev. dr. ULg.","Revue de la Faculté de droit de l'Université de Liège"],
-["R .D.E.","Revue du droit des étrangers"],
+["Rev. dr. ULg.","Revue de la Faculté de droit de l'Université de Liège"],
+["R.D.E.","Revue du droit des étrangers"],
 ["Rép. fisc.","Répertoire fiscal"],
 ["Soc. kron.","Sociaalrechtelijke kronieken"],
-["social. Droit du travail","Compendium social. Droit du travail"],
-["Stn. J.C.R.C.L.","Stanford Journal of Civil Rights and Civil Liberties"],
+["Compendium social. Droit du travail","Compendium social. Droit du travail"],
+["Stn. J.C.R.C.L.","Stanford Journal of Civil Rights and Civil Liberties"],
 ["T. agr. r.","Tijdschrift voor agrarisch recht"],
 ["T. ann.","Tijdschrift voor aannemingsrecht"],
 ["T. app.","Tijdschrift voor appartements en immorecht"],
@@ -611,7 +612,7 @@ const REVUES=[
 ["T.E.P.","Tijdschrift estate planning"],
 ["T.F.R.","Tijdschrift voor fiscaal recht"],
 ["T.G.R.","Tijdschrift voor Gentse rechtspraak"],
-["T.G.R./T.W.V.R.","Tijdschrift voor Gentse en West- Vlaamse Rechtspraak"],
+["T.G.R./T.W.V.R.","Tijdschrift voor Gentse en West-Vlaamse Rechtspraak"],
 ["T.J.K.","Tijdschrift voor jeugdrecht en kinderrechten"],
 ["T.M.R.","Tijdschrift voor milieurecht"],
 ["T.O.R.B.","Tijdschrift voor onderwijsrecht en onderwijsbeleid"],
@@ -621,14 +622,147 @@ const REVUES=[
 ["T.R.V.","Tijdschrift voor rechtspersonen en vennootschap"],
 ["T.S.R.","Tijdschrift voor sociaal recht"],
 ["T.V.B.R.","Tijdschrift voor Brugse rechtspraak"],
-["T. Fam.","Tijdschrift voor familierecht"],
+["T. Fam.","Tijdschrift voor familierecht"],
 ["Trav. Com. ét. et lég. not.","Travaux du Comité d'études et de législation du notariat"],
 ["Trav. conf. U.L.B.","Travaux et conférences de la Faculté de Droit de l'Université libre de Bruxelles"],
 ["Verkeersrecht","Verkeersrecht Jurisprudentie"],
 ["Vl. T. Gez.","Vlaams tijdschrift voor gezondheidsrecht"],
 ["Vr. Ant.","Bulletin van vragen en antwoorden"],
 ["Y.H.R.D.L.J.","Yale Human Rights and Development Law Journal"],
-["Yearb. Eur. Conv. Hum. R.","Yearbook of the european Convention on human rights"]
+["Yearb. Eur. Conv. Hum. R.","Yearbook of the european Convention on human rights"],
+["Administrer","Administrer"],
+["A. hosp.","Acta hospitalia"],
+["A.M.","Auteurs & Media"],
+["Amén.","Aménagement-environnement"],
+["A.P.","Administration publique"],
+["A.P.M.","Administration publique – mensuel"],
+["A.P.R.","Algemene praktische rechtsverzameling"],
+["A.P.T.","Administration publique – trimestriel"],
+["Arbbl.","Arbeidsblad"],
+["Arr. Cass.","Arresten van het Hof van cassatie"],
+["Bank fin.","Bank- en financiewezen"],
+["Banque","Banque"],
+["B.J.","Belgique judiciaire"],
+["C.A.-A.","Cour d'arbitrage – Arrêts"],
+["C.C.-A.","Cour constitutionnelle – Arrêts"],
+["Cah. jur.","Cahier du juriste – van de jurist"],
+["C. & F.P.","Comptabilité et fiscalité pratiques"],
+["C.H. CRISP","Courrier hebdomadaire du Centre de recherche et d'information socio-politiques"],
+["C.J. Benelux – Jurisp.","Cour de justice Benelux – Jurisprudence"],
+["C.L.S.R.","The Computer Law and Security Report"],
+["Comm. M.L.R.","Common Market Law Review"],
+["Commentaire systématique du Code","Commentaire systématique du Code des sociétés"],
+["Computerr.","Computerrecht"],
+["Construction","Construction"],
+["Cour. fisc.","Courrier fiscal"],
+["D.","Recueil Dalloz"],
+["D.H.","Recueil hebdomadaire Dalloz"],
+["D.P.","Recueil périodique Dalloz"],
+["D.S.","Recueil Dalloz-Sirey"],
+["De Gem.","De Gemeente"],
+["De Gids","De Gids op maatschappelijk gebied"],
+["De Verz.","De Verzekering"],
+["Dict. comm.","Dictionnaire communal"],
+["Divorce. Commentaire pratique","Divorce. Commentaire pratique"],
+["Doc. Cepess","Documents CEPESS"],
+["Droit pénal et procédure pénale","Droit pénal et procédure pénale"],
+["Dr. sociétés","Droit des sociétés"],
+["Échos log.","Les Échos du logement"],
+["E.D.C.E.","Études et documents, publiés par le Conseil d'État de France"],
+["E.J.","Echtscheidingsjournaal"],
+["Et. et Doc.","Études et Documents, publiés par le Conseil d'État de France"],
+["Eur. vervoerr.","Europees vervoerrecht"],
+["Exp.","Expertises des Systèmes d'information"],
+["Fiscologue","Le Fiscologue"],
+["Fiscoloog","Fiscoloog"],
+["Gaz. Pal.","Gazette du Palais"],
+["Guide dr. imm.","Guide de droit immobilier"],
+["Guide jur. entr.","Guide juridique de l'entreprise"],
+["H.R.I.L.D.","Human Rights and International Legal Discourse"],
+["H.R.Q.","Human Rights Quarterly"],
+["Huiss. just.","L'huissier de justice"],
+["Huur","Huur – Het huurrecht in de praktijk"],
+["Huurrecht","Huurrecht"],
+["I.C.L.Q.","International Comparative Law Quarterly"],
+["IDj","Information et documentation juridiques"],
+["I.H.R.R.","International Human Rights Reports"],
+["Indic. soc.","L'Indicateur social"],
+["Info-jura","Info-jura"],
+["Inf.-R.I.Z.I.V.","Informatieblad R.I.Z.I.V."],
+["Intern. vervoerr.","Internationaal vervoerrecht over land en zee"],
+["Ius","Interuniversitair studententijdschrift"],
+["Ius & actores","Ius & actores"],
+["Iuvis","Iuvis"],
+["J.C.A.","Jurisclasseur administratif"],
+["J.C.P.","Jurisclasseur périodique (La Semaine juridique)"],
+["J.E.L.","Justice en ligne"],
+["Jurim.","Jurimpratique"],
+["Juristenkrant","De Juristenkrant"],
+["Jura Falc.","Jura Falconis"],
+["Larc. Cass.","Larcier Cassation"],
+["L.B.","Lex belgica"],
+["L.E.A.","Law & european affairs"],
+["Rec. Lebon","Recueil des décisions du Conseil d'État et des jugements des tribunaux administratifs (France)"],
+["Leefmilieu","Leefmilieu"],
+["Le pli jur.","Le pli juridique"],
+["Les baux. Commentaire pratique","Les baux. Commentaire pratique"],
+["Les pages","Les pages. Obligations, contrats et responsabilités"],
+["Les régimes matrimoniaux","Les régimes matrimoniaux"],
+["L'hôp. belge","L'hôpital belge"],
+["L.I.E.I.","Legal Issues of European Integration"],
+["Limb. Rechtsl.","Limburgs Rechtsleven"],
+["L.R.L.","Limburgs Rechtsleven"],
+["Maas. J. Eur. Comp. L.","Maastricht Journal of European and Comparative Law"],
+["Manuel de la réparation des dommages corporels en droit commun","Manuel de la réparation des dommages corporels en droit commun"],
+["M.E.R.","Milieu- en energierecht"],
+["Mouv. comm.","Mouvement communal"],
+["N.E.D.","Notes et études documentaires"],
+["N.N.K.","Nieuw notarieel kwartaalschrift"],
+["Not.","Notarius"],
+["Not. Fisc. Maand.","Notariaat – Notarieel en fiscaal maandblad"],
+["N.Q.H.R.","Netherlands quarterly of human rights"],
+["Obligations. Commentaire pratique","Obligations. Commentaire pratique"],
+["Omn.","Omnilegie"],
+["Omnia Frat.","Omnia Fraterne"],
+["O.R.","Ondernemingsrecht"],
+["Oriëntatie","Oriëntatie. Sociaal recht en personeelsbeleid"],
+["Pand.","Pandectes belges"],
+["Pand. pér.","Pandectes périodiques"],
+["P. & B.","Tijdschrift voor procesrecht en bewijsrecht"],
+["Penant","Revue du droit des pays d'Afrique (Recueil Penant)"],
+["Petites aff.","Les petites affiches"],
+["Pol.","Politica"],
+["Pouvoirs","Pouvoirs. Revue d'études constitutionnelles et politiques"],
+["Prat. comm.","Pratiques du commerce"],
+["Prog. soc.","Progrès social"],
+["Propr. ind.","La propriété industrielle"],
+["R.A.E.","Revue des affaires européennes"],
+["R. Cass.","Recente arresten van het Hof van Cassatie"],
+["Rec. arr. R.v.St.","Recente arresten van de Raad van State"],
+["Rec. C.J.C.E.","Recueil de la jurisprudence de la Cour de justice et du Tribunal de première instance des Communautés européennes"],
+["Refl. persp. écon.","Reflets et perspectives de la vie économique"],
+["Rép. Defrénois","Répertoire du notariat Defrénois"],
+["Rép. not.","Répertoire notarial"],
+["Res jur. imm.","Res et jura immobilia"],
+["Responsabilités – Traité théorique et pratique","Responsabilités – Traité théorique et pratique"],
+["Res publ.","Res publica"],
+["Rev. Adm.","La Revue administrative"],
+["Rev. huissiers","Revue des huissiers de justice"],
+["Rev. loyers","Revue des loyers"],
+["S.","Recueil Sirey"],
+["Samsom Act. fisc.","Samsom Actualités fiscales"],
+["Samsom Jur. fisc.","Samsom Jurisprudence fiscale"],
+["Scolanews","Scolanews"],
+["Sem. jur.","La semaine juridique"],
+["S.E.W.","Sociaal economische wetgeving – Tijdschrift voor Europees en economisch recht"],
+["Stud. Dipl.","Studia Diplomatica"],
+["Stud. voordr. V.U.B.","Studies en voordrachten van de Faculteit der Rechtsgeleerdheid van de Vrije Universiteit Brussel"],
+["Syst. perm. doc.","Système permanent de documentation"],
+["T.B.M.","Tijdschrift voor Belgische mededinging"],
+["T. desk.","Tijdschrift van de deskundige"],
+["Tegenspraak","Tegenspraak – Kritisch tijdschrift over recht en maatschappij"],
+["Turnh. rechtsl.","Turnhouts rechtsleven"],
+["Union libre. Commentaire pratique","Union libre. Commentaire pratique"]
 ];
 /* index de recherche */
 const ABBR_SET=new Set(REVUES.map(r=>r[0].toLowerCase()));
@@ -875,13 +1009,13 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
 const OJ={
   cassation:{abbr:'Cass.',ville:false},
   appel:{abbr:'',ville:true,cityOnly:true,villeLabel:"Ville de la cour d'appel",villeHint:'Anvers, Bruxelles, Gand, Liège ou Mons'},
-  ctrav:{abbr:'C. trav.',ville:true,villeLabel:'Siège (ville)',villeHint:'Anvers, Bruxelles, Gand, Liège ou Mons',div:true,lang:true},
+  ctrav:{abbr:'C. trav.',ville:true,villeLabel:'Siège (ville)',villeHint:'Anvers, Bruxelles, Gand, Liège ou Mons',div:true},
   assises:{abbr:'Cour ass.',ville:true,villeLabel:'Province'},
   civ:{abbr:'Civ.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
   corr:{abbr:'Corr.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
   tribfam:{abbr:'Trib. fam.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
   tribjeun:{abbr:'Trib. jeun.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
-  tap:{abbr:'T.A.P.',ville:true,villeLabel:'Siège'},
+  tap:{abbr:'T.A.P.',ville:true,lang:true,villeLabel:'Siège'},
   tribentr:{abbr:'Trib. entr.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
   comm:{abbr:'Comm.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
   tribtrav:{abbr:'Trib. trav.',ville:true,div:true,lang:true,villeLabel:'Siège (arrondissement)'},
@@ -889,14 +1023,25 @@ const OJ={
   jp:{abbr:'J.P.',ville:true,cant:true,siege:true,villeLabel:'Canton',villeHint:'ex. Mons ou Audenarde-Kruishoutem'},
   tribarr:{abbr:'Trib. arr.',ville:true,villeLabel:'Siège'}
 };
+/* Tribunaux bruxellois scindés (fr. / néerl.) pour les décisions postérieures au 31 mars 2014 */
+const BXL_SPLIT_DATE='2014-03-31';
+function isBxl(v){return /^(bruxelles|brussel)$/i.test((v||'').trim());}
+/* le champ fr./néerl. est requis : siège Bruxelles + date postérieure au 31/03/2014 (ou date pas encore saisie) */
+function bxlLangNeeded(cfg){
+  if(!cfg.lang||!isBxl(val('oj-ville'))) return false;
+  const d=val('oj-date');
+  return !d || d>BXL_SPLIT_DATE;
+}
 function ojRefresh(){
   const cfg=OJ[document.getElementById('oj-type').value];
   const show=(id,b)=>document.getElementById(id).classList.toggle('show',!!b);
-  show('oj-ville-f',cfg.ville);show('oj-lang-f',cfg.lang);show('oj-div-f',cfg.div);
+  show('oj-ville-f',cfg.ville);show('oj-lang-f',bxlLangNeeded(cfg));show('oj-div-f',cfg.div);
   show('oj-cant-f',cfg.cant);show('oj-siege-f',cfg.siege);
   if(cfg.ville){document.getElementById('oj-ville-l').innerHTML=(cfg.villeLabel||'Ville / siège')+' <span class="hint">(en toutes lettres)</span>';document.getElementById('oj-ville-sub').textContent=cfg.villeHint||'';}
 }
-document.getElementById('oj-type').addEventListener('change',ojRefresh);ojRefresh();
+document.getElementById('oj-type').addEventListener('change',ojRefresh);
+['oj-ville','oj-date'].forEach(id=>{const e=document.getElementById(id);e.addEventListener('input',ojRefresh);e.addEventListener('change',ojRefresh);});
+ojRefresh();
 
 document.querySelectorAll('input[name=ojmode]').forEach(r=>r.addEventListener('change',()=>{
   document.querySelectorAll('#oj-mode label').forEach(l=>l.classList.remove('sel'));r.closest('label').classList.add('sel');
@@ -920,6 +1065,17 @@ function segNote(tId,nId){
   return ', '+t+(n?' '+esc(n):'');
 }
 
+/* Canton de justice de paix : un simple numéro (« 2 », « 2e », « 2ème », « 2e canton »…)
+   est complété en « 2ᵉ cant. » (abréviation du Guide) ; « canton » étant masculin, « 1 » donne « 1ᵉʳ cant. ».
+   Toute autre saisie est reprise telle quelle. */
+function cantonFmt(raw){
+  const s=(raw||'').trim();
+  const m=s.match(/^(\d+)\s*(?:er|re|ère|e|ème|eme|ᵉ|°)?\s*(?:cant\.?|canton)?$/i);
+  if(!m) return esc(s);
+  const n=m[1];
+  return n+'<sup>'+(n==='1'?'er':'e')+'</sup> cant.';
+}
+
 function genOJ(){
   clearErr('oj');
   const cfg=OJ[document.getElementById('oj-type').value];
@@ -927,12 +1083,16 @@ function genOJ(){
   const date=dateFR(val('oj-date'));
   if(!date) return showErr('oj','Veuillez indiquer la date du prononcé.');
   if(cfg.cityOnly&&!ville) return showErr('oj','Veuillez indiquer la ville de la cour d\'appel.');
+  // Bruxelles après le 31/03/2014 : mention fr. / néerl. obligatoire (ignorée avant cette date)
+  const needLang=bxlLangNeeded(cfg);
+  const lg=needLang?val('oj-lang'):'';
+  if(needLang&&!lg) return showErr('oj','Pour une décision d\'un tribunal bruxellois postérieure au 31 mars 2014, précisez s\'il s\'agit du tribunal francophone (fr.) ou néerlandophone (néerl.).');
   let base;
   if(cfg.cityOnly){base=esc(ville);}
-  else{base=cfg.abbr;if(cfg.lang){const lg=val('oj-lang');if(lg)base+=' '+lg;}if(cfg.ville&&ville)base+=' '+esc(ville);}
+  else{base=cfg.abbr;if(lg)base+=' '+lg;if(cfg.ville&&ville)base+=' '+esc(ville);}
   let after='';
   if(cfg.div){const d=val('oj-div');if(d)after+=', div. '+esc(d);}
-  if(cfg.cant){const c=val('oj-cant');if(c)after+=', '+esc(c);}
+  if(cfg.cant){const c=val('oj-cant');if(c)after+=', '+cantonFmt(c);}
   if(cfg.siege){const sg=val('oj-siege');if(sg){const el=/^[aeiouyàâäéèêëîïôöûü]/i.test(sg)?"d'":"de ";after+=', siège '+el+esc(sg);}}
   const chf=chamberFmt(val('oj-ch'));
   const cham=chf.html?' ('+chf.html+')':'';
